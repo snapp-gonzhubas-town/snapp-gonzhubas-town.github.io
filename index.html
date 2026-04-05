@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кодекс регулювання канабісу — Ганжубасик Таун</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1a0e;
+    --paper: #f5f0e8;
+    --paper2: #ede8dc;
+    --paper3: #e4dece;
+    --green-dark: #1a3a1a;
+    --green-mid: #2d5a2d;
+    --green-accent: #3d7a3d;
+    --green-light: #7ab87a;
+    --green-pale: #d4e8d4;
+    --gold: #8a6a1a;
+    --gold-light: #c9a84c;
+    --red-law: #7a1a1a;
+    --border: #c8bfa8;
+    --shadow: rgba(15,26,14,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--green-dark);
+    color: #f5f0e8;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--gold);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 40px;
+    gap: 20px;
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-emblem {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+  .header-title-group h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--gold-light);
+    line-height: 1.2;
+  }
+  .header-title-group p {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #a8c8a8;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .header-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #8aaa8a;
+    text-align: right;
+    line-height: 1.6;
+  }
+  .header-meta span {
+    display: block;
+  }
+  .header-meta .doc-num {
+    color: var(--gold-light);
+    font-weight: 500;
+  }
+
+  /* ── NAV ── */
+  .site-nav {
+    background: var(--green-mid);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .site-nav::-webkit-scrollbar { display: none; }
+  .nav-link {
+    color: #c8e8c8;
+    text-decoration: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold-light);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--green-dark) 0%, #0d2a0d 60%, #1a3a0d 100%);
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232d5a2d' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  .hero-inner {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid var(--gold-light);
+    color: var(--gold-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    color: #f5f0e8;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .hero h2 em {
+    color: var(--gold-light);
+    font-style: normal;
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: #a8c8a8;
+    max-width: 560px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: #7aaa7a;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── EXECUTIVE SUMMARY ── */
+  .summary-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--green-pale);
+    padding-bottom: 12px;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .summary-card {
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green-accent);
+    padding: 20px;
+    border-radius: 2px;
+  }
+  .summary-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 8px;
+  }
+  .summary-card p {
+    font-size: 14px;
+    color: #3a3a2a;
+    line-height: 1.6;
+  }
+
+  /* ── ECON SCENARIOS ── */
+  .econ-section {
+    background: var(--paper2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .econ-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .scenario-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 2px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .scenario-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .scenario-card.conservative::before { background: var(--green-light); }
+  .scenario-card.base::before { background: var(--green-accent); }
+  .scenario-card.optimistic::before { background: var(--green-dark); }
+  .scenario-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin-bottom: 8px;
+  }
+  .scenario-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green-dark);
+    line-height: 1;
+  }
+  .scenario-unit {
+    font-size: 12px;
+    color: var(--gold);
+    margin: 4px 0 8px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .scenario-desc {
+    font-size: 13px;
+    color: #5a5a4a;
+  }
+
+  /* ── CHAPTERS ── */
+  .chapters-nav {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 40px 0;
+  }
+  .chapter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .chapter-tab {
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .chapter-tab:hover, .chapter-tab.active {
+    background: var(--green-dark);
+    color: var(--gold-light);
+    border-color: var(--green-dark);
+  }
+
+  /* ── ARTICLES ── */
+  .articles-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 40px 60px;
+  }
+  .chapter-group {
+    margin-bottom: 8px;
+  }
+  .chapter-header {
+    background: var(--green-dark);
+    color: var(--gold-light);
+    padding: 14px 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 2px 2px 0 0;
+    margin-top: 32px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .chapter-header:hover { background: var(--green-mid); }
+  .chapter-header .ch-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: rgba(201,168,76,0.25);
+    border: 1px solid var(--gold-light);
+    padding: 2px 8px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+  .chapter-header .ch-toggle {
+    margin-left: auto;
+    font-size: 18px;
+    transition: transform 0.3s;
+    color: var(--gold-light);
+  }
+  .chapter-header.collapsed .ch-toggle { transform: rotate(-90deg); }
+  .chapter-articles {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 2px 2px;
+    overflow: hidden;
+  }
+
+  /* ── ARTICLE ITEM ── */
+  .article-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .article-item:last-child { border-bottom: none; }
+  .article-trigger {
+    width: 100%;
+    background: var(--paper);
+    border: none;
+    text-align: left;
+    padding: 18px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: background 0.2s;
+    font-family: 'Source Serif 4', serif;
+  }
+  .article-trigger:hover { background: var(--green-pale); }
+  .article-trigger.open { background: var(--green-pale); }
+  .article-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--green-accent);
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 1px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .article-title-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--green-dark);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .article-arrow {
+    font-size: 14px;
+    color: var(--green-accent);
+    flex-shrink: 0;
+    margin-top: 3px;
+    transition: transform 0.3s;
+  }
+  .article-trigger.open .article-arrow { transform: rotate(90deg); }
+
+  .article-body {
+    display: none;
+    padding: 0 24px 24px 24px;
+    background: var(--paper);
+    border-top: 1px solid var(--green-pale);
+  }
+  .article-body.open { display: block; }
+  .article-summary {
+    background: var(--paper2);
+    border-left: 3px solid var(--green-accent);
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #3a3a2a;
+    line-height: 1.65;
+    font-style: italic;
+  }
+  .article-body h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin: 20px 0 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--green-pale);
+  }
+  .subpoints {
+    list-style: none;
+    padding: 0;
+  }
+  .subpoints li {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--ink);
+    border-bottom: 1px dotted var(--border);
+    line-height: 1.55;
+  }
+  .subpoints li:last-child { border-bottom: none; }
+  .subpoints .sp-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-weight: 500;
+  }
+  .penalty-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 1px;
+    margin-left: 6px;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+  }
+  .penalty-admin {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+  }
+  .penalty-criminal {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #dc3545;
+  }
+  .penalty-license {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #17a2b8;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--green-dark);
+    color: #7aaa7a;
+    text-align: center;
+    padding: 40px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    border-top: 3px solid var(--gold);
+  }
+  footer .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+  footer p { margin: 4px 0; }
+  footer .footer-legal {
+    color: #4a7a4a;
+    font-size: 10px;
+    margin-top: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+
+  /* ── SEARCH ── */
+  .search-bar {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 40px 0;
+  }
+  .search-input {
+    width: 100%;
+    padding: 12px 20px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input::placeholder { color: #9a9a8a; }
+  .search-input:focus { border-color: var(--green-accent); }
+
+  /* ── KPI TABLE ── */
+  .kpi-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px 48px;
+  }
+  .kpi-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 20px;
+  }
+  .kpi-table th {
+    background: var(--green-dark);
+    color: var(--gold-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-align: left;
+    font-weight: 500;
+  }
+  .kpi-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+  }
+  .kpi-table tr:nth-child(even) td { background: var(--paper2); }
+  .kpi-table .kpi-val {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--green-accent);
+    font-weight: 500;
+  }
+
+  @media (max-width: 680px) {
+    .header-top { padding: 12px 20px; }
+    .hero { padding: 40px 20px; }
+    .summary-section, .articles-section, .search-bar, .chapters-nav, .kpi-section, .econ-inner { padding-left: 20px; padding-right: 20px; }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .site-nav { padding: 0 20px; }
+    .hero-stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-logo">
+      <svg class="logo-emblem" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="23" stroke="#c9a84c" stroke-width="1.5"/>
+        <circle cx="24" cy="24" r="18" stroke="#c9a84c" stroke-width="0.5" stroke-dasharray="2 3"/>
+        <path d="M24 8 C24 8 14 16 14 24 C14 30 18 34 24 36 C30 34 34 30 34 24 C34 16 24 8 24 8Z" fill="#2d5a2d" stroke="#7ab87a" stroke-width="0.8"/>
+        <path d="M24 10 C22 15 18 18 16 22 C16 28 20 32 24 34" stroke="#a8d8a8" stroke-width="0.6" fill="none"/>
+        <path d="M24 10 C26 15 30 18 32 22 C32 28 28 32 24 34" stroke="#a8d8a8" stroke-width="0.6" fill="none"/>
+        <path d="M24 10 C24 20 24 28 24 36" stroke="#c9a84c" stroke-width="0.5"/>
+        <circle cx="24" cy="36" r="2" fill="#c9a84c"/>
+        <text x="24" y="46" text-anchor="middle" font-size="5" font-family="serif" fill="#c9a84c">ГТ</text>
+      </svg>
+      <div class="header-title-group">
+        <h1>Кодекс регулювання канабісу</h1>
+        <p>Ганжубасик Таун · Муніципальний пілотний проєкт</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="doc-num">КРК-2024/51</span>
+      <span>Ред. 1.0 · Проєкт</span>
+      <span>51 стаття · 8 розділів</span>
+    </div>
+  </div>
+  <nav class="site-nav">
+    <a href="#summary" class="nav-link">Резюме</a>
+    <a href="#economics" class="nav-link">Економіка</a>
+    <a href="#articles" class="nav-link">Кодекс</a>
+    <a href="#kpi" class="nav-link">KPI</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Муніципальний правовий документ · Статус: Проєкт</div>
+    <h2>Кодекс регулювання<br><em>канабісу</em> міста</h2>
+    <p class="hero-sub">Комплексна правова модель легалізованого, регульованого та відповідального обігу канабісу в Ганжубасик Тауні з населенням 1 000 000 мешканців</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">51</div>
+        <div class="hero-stat-label">Стаття</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">8</div>
+        <div class="hero-stat-label">Розділів</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">40 г</div>
+        <div class="hero-stat-label">Ліміт/місяць</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">21+</div>
+        <div class="hero-stat-label">Мінімальний вік</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3 млрд</div>
+        <div class="hero-stat-label">₴/рік (опт.)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section id="summary" class="summary-section">
+  <div class="section-label">Виконавче резюме</div>
+  <h2 class="section-title">Про проєкт</h2>
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h3>🎯 Мета</h3>
+      <p>Регулювання канабісу, захист здоров'я населення та розвиток «зеленої» економіки міста через легалізований і прозорий ринок.</p>
+    </div>
+    <div class="summary-card">
+      <h3>⚖️ Правова база</h3>
+      <p>Конституція України ст. 42, 49, 140. Узгодженість із ЗУ «Про наркотичні засоби». Пілотний статус у рамках реформи ККУ ст. 307–309.</p>
+    </div>
+    <div class="summary-card">
+      <h3>🏛️ Агентство АКК</h3>
+      <p>Нове міське Агентство контролю канабісу: видача ліцензій, нагляд, перевірки, електронний реєстр, звітність перед радою.</p>
+    </div>
+    <div class="summary-card">
+      <h3>🔬 Система обліку</h3>
+      <p>Seed-to-sale: унікальний QR-код для кожної партії від посіву до продажу. Обов'язкове лабораторне тестування THC, CBD, пестицидів, бактерій.</p>
+    </div>
+    <div class="summary-card">
+      <h3>🛡️ Захист суспільства</h3>
+      <p>Заборона продажу до 21 року, заборона публічного вживання, «нульова толерантність» до водіння під впливом, повна заборона реклами.</p>
+    </div>
+    <div class="summary-card">
+      <h3>📊 Моніторинг</h3>
+      <p>Щоквартальні соціологічні опитування, публічні звіти кожні 6 місяців, незалежний аудит через 5 років, 20-річний план KPI.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ECONOMICS -->
+<section id="economics" class="econ-section">
+  <div class="econ-inner">
+    <div class="section-label">Фінансове прогнозування</div>
+    <h2 class="section-title">Економічні сценарії</h2>
+    <div class="scenario-grid">
+      <div class="scenario-card conservative">
+        <div class="scenario-label">Консервативний</div>
+        <div class="scenario-amount">400 млн</div>
+        <div class="scenario-unit">₴ / рік</div>
+        <div class="scenario-desc">15% споживачів легального ринку. Базові надходження від акцизів та ліцензій.</div>
+      </div>
+      <div class="scenario-card base">
+        <div class="scenario-label">Базовий</div>
+        <div class="scenario-amount">1,4 млрд</div>
+        <div class="scenario-unit">₴ / рік</div>
+        <div class="scenario-desc">30% споживачів. Активний туризм, розвинена переробна галузь.</div>
+      </div>
+      <div class="scenario-card optimistic">
+        <div class="scenario-label">Оптимістичний</div>
+        <div class="scenario-amount">3–5 млрд</div>
+        <div class="scenario-unit">₴ / рік</div>
+        <div class="scenario-desc">50–60% ринку + туризм + експорт. Повноцінний агро-біотех-кластер.</div>
+      </div>
+    </div>
+    <div style="margin-top: 24px; background: var(--paper); border: 1px solid var(--border); padding: 20px; border-radius: 2px;">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--green-accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px;">Розподіл податкових надходжень</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <div style="flex:1; min-width:120px; text-align:center; background: var(--paper2); padding: 12px; border-radius: 2px; border:1px solid var(--border);">
+          <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--green-dark); font-weight:700;">30%</div>
+          <div style="font-size:12px; color:#5a5a4a; margin-top:3px;">Освіта</div>
+        </div>
+        <div style="flex:1; min-width:120px; text-align:center; background: var(--paper2); padding: 12px; border-radius: 2px; border:1px solid var(--border);">
+          <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--green-dark); font-weight:700;">25%</div>
+          <div style="font-size:12px; color:#5a5a4a; margin-top:3px;">Медицина</div>
+        </div>
+        <div style="flex:1; min-width:120px; text-align:center; background: var(--paper2); padding: 12px; border-radius: 2px; border:1px solid var(--border);">
+          <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--green-dark); font-weight:700;">20%</div>
+          <div style="font-size:12px; color:#5a5a4a; margin-top:3px;">Інфраструктура</div>
+        </div>
+        <div style="flex:1; min-width:120px; text-align:center; background: var(--paper2); padding: 12px; border-radius: 2px; border:1px solid var(--border);">
+          <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--green-dark); font-weight:700;">10%</div>
+          <div style="font-size:12px; color:#5a5a4a; margin-top:3px;">Безпека</div>
+        </div>
+        <div style="flex:1; min-width:120px; text-align:center; background: var(--paper2); padding: 12px; border-radius: 2px; border:1px solid var(--border);">
+          <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--green-dark); font-weight:700;">15%</div>
+          <div style="font-size:12px; color:#5a5a4a; margin-top:3px;">Резервний фонд</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" class="search-input" id="articleSearch" placeholder="🔍  Пошук за статтею, назвою або ключовим словом..." oninput="filterArticles(this.value)">
+</div>
+
+<!-- CHAPTER TABS -->
+<div class="chapters-nav" id="articles">
+  <div class="section-label">Кодекс регулювання канабісу</div>
+  <h2 class="section-title">51 стаття · 8 розділів</h2>
+  <div class="chapter-tabs" id="chapterTabs">
+    <button class="chapter-tab active" onclick="filterChapter('all', this)">Усі розділи</button>
+    <button class="chapter-tab" onclick="filterChapter('1', this)">I. Загальні положення</button>
+    <button class="chapter-tab" onclick="filterChapter('2', this)">II. Права осіб</button>
+    <button class="chapter-tab" onclick="filterChapter('3', this)">III. Ліцензування</button>
+    <button class="chapter-tab" onclick="filterChapter('4', this)">IV. Контроль якості</button>
+    <button class="chapter-tab" onclick="filterChapter('5', this)">V. Санкції</button>
+    <button class="chapter-tab" onclick="filterChapter('6', this)">VI. Соціальні програми</button>
+    <button class="chapter-tab" onclick="filterChapter('7', this)">VII. Економіка</button>
+    <button class="chapter-tab" onclick="filterChapter('8', this)">VIII. Прикінцеві положення</button>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<div class="articles-section" id="articlesContainer">
+
+  <!-- CHAPTER 1 -->
+  <div class="chapter-group" data-chapter="1">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ I</span>
+      Загальні положення та інституційна база
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 1 цілі сфера застосування мета регулювання канабіс">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 1</span>
+          <span class="article-title-text">Цілі і сфера застосування</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Визначає мету (регулювання канабісу, захист здоров'я, розвиток міста) і сферу дії (територія міста, всі суб'єкти). Перераховує конституційні підстави: ст. 42, 49, 140.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">1.1</span>Цей Кодекс регулює обіг канабісу на всій території міста Ганжубасик Таун з метою захисту здоров'я населення, зменшення шкоди від нелегального ринку та розвитку «зеленої» економіки.</li>
+            <li><span class="sp-num">1.2</span>Дія Кодексу поширюється на фізичних осіб, юридичних осіб та органи влади, що провадять діяльність, пов'язану з канабісом, у межах міської юрисдикції.</li>
+            <li><span class="sp-num">1.3</span>Конституційні підстави: ст. 42 (право на підприємництво), ст. 49 (охорона здоров'я), ст. 140 (місцеве самоврядування).</li>
+            <li><span class="sp-num">1.4</span>У разі суперечності між нормами Кодексу та Конституцією або законами України пріоритет надається Конституції та законам.</li>
+            <li><span class="sp-num">1.5</span>Кодекс не поширюється на канабіс, що застосовується виключно у медичних цілях відповідно до окремого ліцензування МОЗ України.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 2 тлумачення визначення поняття канабіс ліцензія">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 2</span>
+          <span class="article-title-text">Тлумачення термінів</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Визначає поняття: «канабіс», «рекреаційний/медичний канабіс», «ліцензія», «дозвіл», «персональна реєстрація», «чистий паспорт» тощо.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">2.1</span><strong>«Канабіс»</strong> — рослини роду Cannabis sativa L., їх частини та похідні продукти, що містять тетрагідроканабінол (THC) у концентрації понад 0,2%.</li>
+            <li><span class="sp-num">2.2</span><strong>«Рекреаційний канабіс»</strong> — канабіс, що вживається з метою отримання задоволення, а не з лікувальною метою.</li>
+            <li><span class="sp-num">2.3</span><strong>«Ліцензія»</strong> — офіційний дозвіл АКК на провадження комерційної діяльності, пов'язаної з канабісом.</li>
+            <li><span class="sp-num">2.4</span><strong>«Персональна реєстрація»</strong> — обліковий запис фізичної особи в електронному реєстрі АКК, що підтверджує право на придбання та зберігання канабісу.</li>
+            <li><span class="sp-num">2.5</span><strong>«Чистий паспорт»</strong> — підтверджена відсутність судимостей за тяжкі злочини та зв'язків із злочинними угрупованнями у власника ліцензії.</li>
+            <li><span class="sp-num">2.6</span><strong>«Seed-to-sale»</strong> — система цифрового відстеження канабісу від посіву до продажу кінцевому споживачу.</li>
+            <li><span class="sp-num">2.7</span><strong>«АКК»</strong> — Агентство контролю канабісу міста Ганжубасик Таун.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 5 агентство контроль ака повноваження орган">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 5</span>
+          <span class="article-title-text">Агентство контролю канабісу (АКК)</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Створюється новий орган міської влади з повноваженнями видачі/анулювання ліцензій, нагляду, перевірок, ведення реєстру. Підзвітний міській раді.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">5.1</span>АКК є самостійним органом виконавчої влади міста, підзвітним Міській раді та Міському голові.</li>
+            <li><span class="sp-num">5.2</span>Повноваження АКК: видача та анулювання ліцензій, нагляд за дотриманням Кодексу, проведення планових і позапланових перевірок, ведення електронного реєстру.</li>
+            <li><span class="sp-num">5.3</span>Штат АКК: юристи, еколог-інспектори, економісти, IT-фахівці, наркологи, поліцейські офіцери зв'язку.</li>
+            <li><span class="sp-num">5.4</span>Бюджет АКК формується з міського бюджету, ліцензійних зборів та частини штрафів за порушення Кодексу.</li>
+            <li><span class="sp-num">5.5</span>АКК подає Міській раді щоквартальний публічний звіт про стан ринку, кількість ліцензій, правопорушень та надходжень до бюджету.</li>
+            <li><span class="sp-num">5.6</span>При АКК діє Консультаційна рада (лікарі, педагоги, наркологи, бізнес) — дорадчий орган без права вето.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div class="chapter-group" data-chapter="2">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ II</span>
+      Права та обов'язки фізичних осіб
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 3 дозволені дії фізичні особи вирощування зберігання">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 3</span>
+          <span class="article-title-text">Дозволені дії — фізичні особи</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Дозволено придбання, зберігання, вживання та самостійне вирощування. Умови: 21+, реєстрація, ліміт 40 г/міс, до 6 рослин, зберігання вдома.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">3.1</span>Фізичним особам, що досягли 21 року, дозволяється придбавати канабіс у ліцензованих диспансерях при пред'явленні паспорта або ID-картки.</li>
+            <li><span class="sp-num">3.2</span>Ліміт придбання: не більше 10 г за одну транзакцію та 40 г на місяць на одну особу.</li>
+            <li><span class="sp-num">3.3</span>Особа зобов'язана пройти персональну реєстрацію в системі АКК (електронна ID-картка споживача) до першого придбання.</li>
+            <li><span class="sp-num">3.4</span>Дозволено самостійне вирощування до 6 рослин на домогосподарство виключно для особистих потреб з обов'язковою реєстрацією кількості.</li>
+            <li><span class="sp-num">3.5</span>Зберігання канабісу — лише вдома, у запечатаній тарі, недоступній дітям та відвідувачам без відома власника.</li>
+            <li><span class="sp-num">3.6</span>Вживання — виключно вдома або у ліцензованих приватних клубах. Публічне куріння заборонено.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 9 ліміт придбання 40 грамів норми">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 9</span>
+          <span class="article-title-text">Лімітні норми придбання</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Ліміт 40 г/міс на людину (аналог Уругваю). Покупець прив'язаний до Реєстру через ID. Спроба обійти ліміт — анулювання покупки, штраф, кримінал при зловживаннях.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">9.1</span>Загальний місячний ліміт придбання канабісу становить 40 грамів на одну зареєстровану особу незалежно від кількості відвідань диспансерів.</li>
+            <li><span class="sp-num">9.2</span>Кожна транзакція фіксується в Реєстрі АКК автоматично через QR-сканування ID покупця.</li>
+            <li><span class="sp-num">9.3</span>Спроба придбання понад ліміт: автоматична відмова системи, сповіщення АКК, попередження покупцю.</li>
+            <li><span class="sp-num">9.4</span>Систематичні спроби обійти ліміт (3+ рази) кваліфікуються як адміністративне правопорушення зі штрафом 2000–5000 ₴. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">9.5</span>Організований обхід лімітів (скупка через підставних осіб) кваліфікується як кримінальне правопорушення за ст. 307 ККУ. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 10 приватне вирощування рослини домашнє">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 10</span>
+          <span class="article-title-text">Приватне вирощування</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Дозволено до 6 рослин на домогосподарство. Умови: реєстрація; держреєстр домашніх ферм. Перевірки із судовим ордером при підозрі нелегальної торгівлі. Продаж урожаю — заборонено.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">10.1</span>Дозволено вирощування до 6 рослин канабісу в межах одного домогосподарства, незалежно від кількості осіб у ньому.</li>
+            <li><span class="sp-num">10.2</span>Власник зобов'язаний зареєструвати кількість рослин та їх місцезнаходження в Реєстрі АКК протягом 7 днів після посадки.</li>
+            <li><span class="sp-num">10.3</span>Продаж або передача вирощеного канабісу третім особам — категорично заборонено. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">10.4</span>Перевірка домашніх ферм допускається виключно на підставі судового ордеру при обґрунтованій підозрі нелегальної торгівлі.</li>
+            <li><span class="sp-num">10.5</span>АКК веде публічний (знеособлений) реєстр домашніх ферм для оцінки загального обсягу виробництва.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 11 особисте вживання норми клуб дома">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 11</span>
+          <span class="article-title-text">Особисте вживання</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Визнане невинною дією у межах норм. До 6 г одноразово вдома/клубі. Перевищення норм — адміністративний штраф або кримінал за ст. 309 ККУ.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">11.1</span>Вживання канабісу у межах встановлених Кодексом норм не є кримінально або адміністративно карним діянням.</li>
+            <li><span class="sp-num">11.2</span>Допустима разова доза для вживання вдома або в ліцензованому клубі — до 6 грамів.</li>
+            <li><span class="sp-num">11.3</span>Зберігання при собі понад 6 г у публічному місці тягне адміністративне стягнення 500–1500 ₴ та вилучення продукту. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">11.4</span>Систематичне порушення норм зберігання може кваліфікуватись за ст. 309 ККУ. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">11.5</span>Водій, що перебуває під впливом канабісу, несе кримінальну відповідальність незалежно від кількості вжитого. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 12 громадські місця заборона куріння школа парк">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 12</span>
+          <span class="article-title-text">Громадські місця</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Чіткий перелік зон, де заборонено вживання: школи/садки (300 м), метро, парки, ресторани, держустанови. Штраф 500–1000 ₴ + вилучення.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">12.1</span>Заборонено вживання або куріння канабісу у будь-якому публічному місці.</li>
+            <li><span class="sp-num">12.2</span>Охоронні зони підвищеного захисту: радіус 300 м від шкіл, дитячих садків, лікарень, ігрових майданчиків, релігійних споруд.</li>
+            <li><span class="sp-num">12.3</span>Заборонено: метро, автобуси, трамваї, таксі, аеропорт, залізничний вокзал, ринки, ресторани, кафе, торгові центри, офіси.</li>
+            <li><span class="sp-num">12.4</span>Штраф за вживання в громадському місці: 500–1000 ₴ + вилучення продукту. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">12.5</span>Повторне порушення протягом року: штраф 2000 ₴, тимчасове призупинення картки споживача. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">12.6</span>Поліція та муніципальні інспектори мають право вилучати продукт без судового ордеру при виявленні порушення на місці.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 13 дорожня безпека водіння тест нульова толерантність">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 13</span>
+          <span class="article-title-text">Дорожня безпека</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">«Zero Tolerance»: водіння під впливом канабісу заборонено. Наркотестери, позбавлення прав на 1 рік, кримінал при аварії (ст. 286 ККУ).</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">13.1</span>Встановлюється принцип нульової толерантності: будь-який рівень THC у слині або крові водія є підставою для порушення справи.</li>
+            <li><span class="sp-num">13.2</span>Поліцейські проходять обов'язкове навчання з використання сертифікованих наркотестерів.</li>
+            <li><span class="sp-num">13.3</span>Санкція за водіння під впливом канабісу: позбавлення права водіння на 1 рік, штраф 3400 ₴ (аналог ст. 130 КУпАП). <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">13.4</span>При ДТП з постраждалими під впливом канабісу — кримінальна відповідальність за ст. 286 ККУ. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">13.5</span>Водії комерційного транспорту, рятувальники, медики та поліцейські підлягають абсолютній нульовій толерантності.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div class="chapter-group" data-chapter="3">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ III</span>
+      Ліцензування та бізнес-діяльність
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 4 дозволені дії бізнес ліцензії категорії">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 4</span>
+          <span class="article-title-text">Дозволені дії — бізнес. Категорії ліцензій</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Встановлюються 4 категорії ліцензій: вирощування (agriculture), переробка/виробництво, лабораторії, роздріб (диспансерії).</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">4.1</span><strong>Agriculture license</strong>: вирощування. Юридичні особи. Акредитована теплиця, охорона, санітарія, облік seed-to-sale, аграрні пільги.</li>
+            <li><span class="sp-num">4.2</span><strong>Processing license</strong>: переробка та виробництво. Ліцензія для виготовлення екстрактів, ліків, косметики. Акредитовані лабораторії та обладнання.</li>
+            <li><span class="sp-num">4.3</span><strong>Laboratory license</strong>: незалежні лабораторії для обов'язкового тестування кожної партії. Міжнародна акредитація (ISO 17025).</li>
+            <li><span class="sp-num">4.4</span><strong>Retail license</strong>: роздріб (диспансерії/аптеки). Виділені зони, ліцензовані бутики, обмеження щільності (не більше 1 на 10 000 мешканців).</li>
+            <li><span class="sp-num">4.5</span>Одна юридична особа може поєднувати не більше двох категорій ліцензій (крім Agriculture + Retail одночасно).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 6 ліцензія вирощування процедура перевірка">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 6</span>
+          <span class="article-title-text">Ліцензія на вирощування</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Деталізує процедуру отримання: подача заявки, перевірка «чистоти паспорта», вимоги до бізнес-плану, землевідведення, безпеки. Інспекція до/після видачі.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">6.1</span>Заявник подає до АКК: бізнес-план, документи на землю/теплицю, засвідчені фінансові джерела, «чистий паспорт» засновників та директора.</li>
+            <li><span class="sp-num">6.2</span>АКК перевіряє відсутність зв'язків заявника зі злочинними угрупованнями протягом 30 робочих днів.</li>
+            <li><span class="sp-num">6.3</span>Обов'язкові вимоги до об'єкту: сертифікована теплиця, CCTV-система (камери зберігають записи 90 днів), подвійна система сигналізації, вентиляція.</li>
+            <li><span class="sp-num">6.4</span>Інспектори АКК проводять обстеження об'єкту до видачі ліцензії та щорічно після.</li>
+            <li><span class="sp-num">6.5</span>Ліцензія видається строком на 2 роки з правом поновлення. Вартість ліцензії встановлюється Міською радою щорічно.</li>
+            <li><span class="sp-num">6.6</span>Ліцензіати зобов'язані підключитись до системи seed-to-sale протягом 30 днів після отримання ліцензії. <span class="penalty-tag penalty-license">Ліцензійна умова</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 7 ліцензія реалізація магазин персонал реклама">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 7</span>
+          <span class="article-title-text">Ліцензія на реалізацію</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Перевірка фінансових джерел, вікове обмеження (21+), заборона реклами/PR, спеціальний знак магазину, фітнес-тести персоналу.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">7.1</span>Диспансер зобов'язаний сканувати ID кожного покупця, фіксувати транзакцію в Реєстрі та відмовляти особам до 21 року.</li>
+            <li><span class="sp-num">7.2</span>Магазини позначаються уніфікованим офіційним знаком АКК. Будь-яка інша реклама та зовнішнє оформлення — заборонено.</li>
+            <li><span class="sp-num">7.3</span>Годинник роботи: 08:00–22:00. Заборонено функціонувати поза вказаним часом. <span class="penalty-tag penalty-license">Ліцензійна умова</span></li>
+            <li><span class="sp-num">7.4</span>Весь персонал проходить обов'язкове навчання: фізіологія канабісу, законодавство, відповідальне споживання, дії в надзвичайних ситуаціях.</li>
+            <li><span class="sp-num">7.5</span>Фінансові джерела засновника перевіряються на предмет легальності. Ліцензія не видається при наявності ознак відмивання коштів.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 31 зняття обліку припинення діяльність">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 31</span>
+          <span class="article-title-text">Зняття з обліку</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Процедура добровільного припинення діяльності: заява в АКК, ліквідація активів під наглядом, повідомлення ДФС.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">31.1</span>Ліцензіат подає заяву про добровільне припинення до АКК не пізніше ніж за 30 днів.</li>
+            <li><span class="sp-num">31.2</span>Запаси канабісу ліквідовуються або передаються іншому ліцензіату виключно під наглядом інспекторів АКК.</li>
+            <li><span class="sp-num">31.3</span>Ліцензіат повідомляє ДФС про ліквідацію та подає фінальний звіт до АКК.</li>
+            <li><span class="sp-num">31.4</span>Система seed-to-sale деактивується після підтвердження АКК нульового залишку запасів.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 32 анулювання ліцензії порушення автоматичне">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 32</span>
+          <span class="article-title-text">Анулювання ліцензії</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Автоматичне анулювання при порушенні умов зберігання, безпеки, продажу неповнолітнім. За грубі порушення — кримінальна стаття.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">32.1</span>Підстави для автоматичного анулювання: продаж неповнолітнім, порушення умов зберігання, виявлення зв'язків із нелегальним ринком.</li>
+            <li><span class="sp-num">32.2</span>АКК видає попередження та призначає 30-денний строк для усунення порушень до анулювання (крім випадків продажу неповнолітнім — негайне анулювання). <span class="penalty-tag penalty-license">Ліцензія</span></li>
+            <li><span class="sp-num">32.3</span>При анулюванні АКК звертається до суду з позовом про відповідальність. Конфіскація запасів.</li>
+            <li><span class="sp-num">32.4</span>Повторне отримання ліцензії тією самою особою можливе не раніше ніж через 3 роки після анулювання.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAPTER 4 -->
+  <div class="chapter-group" data-chapter="4">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ IV</span>
+      Контроль якості та безпека
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 8 облік контроль електронний реєстр seed-to-sale qr">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 8</span>
+          <span class="article-title-text">Облік та контроль (Seed-to-Sale)</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Електронний реєстр: кожна партія від посіву до продажу має унікальний QR-код. Щоденний звіт до АКК. Порушення звітності — штраф.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">8.1</span>Кожна партія канабісу з моменту посіву отримує унікальний QR-код та відстежується до кінцевого продажу споживачу.</li>
+            <li><span class="sp-num">8.2</span>Усі операції (виробництво, переробка, транспортування, продаж) миттєво відображаються в єдиній цифровій системі АКК.</li>
+            <li><span class="sp-num">8.3</span>Ліцензіати зобов'язані подавати щоденний автоматичний звіт через API-підключення до системи АКК.</li>
+            <li><span class="sp-num">8.4</span>Порушення звітності або маніпуляція даними: штраф 5000–20 000 ₴, призупинення ліцензії. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">8.5</span>Система є захищеною від несанкціонованого втручання (blockchain-архітектура, резервне копіювання кожні 6 годин).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 14 санітарні норми вентиляція відходи пожежна безпека">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 14</span>
+          <span class="article-title-text">Санітарні норми</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Вимоги до приміщень: вентиляція, озонування, утилізація відходів, пожежна безпека. Графік медоглядів працівників.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">14.1</span>Приміщення вирощування та переробки повинні мати примусову вентиляцію з HEPA-фільтрами та системою нейтралізації запахів (озонування або вугільні фільтри).</li>
+            <li><span class="sp-num">14.2</span>Відходи виробництва (стебла, листя, відпрацьовані розчини) знищуються в сертифікованих установках. Заборонено скидання у каналізацію.</li>
+            <li><span class="sp-num">14.3</span>Пожежна безпека: відповідно до норм ДБН В.1.1-7. Обов'язкова страховка від пожежі на повну вартість запасів.</li>
+            <li><span class="sp-num">14.4</span>Працівники проходять медогляд щороку та тест на наркотики при прийомі на роботу і щоквартально.</li>
+            <li><span class="sp-num">14.5</span>Порушення санітарних норм: штраф 10 000–50 000 ₴, призупинення ліцензії до усунення. <span class="penalty-tag penalty-license">Ліцензія</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 15 технічні стандарти якість тестування thc cbd">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 15</span>
+          <span class="article-title-text">Технічні стандарти якості</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Обов'язкове незалежне лабораторне тестування кожної партії: THC, CBD, бактерії, пестициди, важкі метали. Max THC 15–18%, жодного продукту без сертифіката.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">15.1</span>Кожна партія канабісу перед реалізацією проходить обов'язкове тестування в акредитованій незалежній лабораторії.</li>
+            <li><span class="sp-num">15.2</span>Обов'язкові тести: вміст THC і CBD (%), мікробіологія (E.coli, Salmonella), залишки пестицидів, важкі метали (Pb, Cd, As, Hg), мікотоксини.</li>
+            <li><span class="sp-num">15.3</span>Максимальний допустимий вміст THC у продукті: 18% (аналог Канади). Продукти з вищим вмістом підлягають знищенню або переробці.</li>
+            <li><span class="sp-num">15.4</span>Жоден продукт не може потрапити в продаж без сертифіката якості з QR-кодом, доступним покупцю для перевірки.</li>
+            <li><span class="sp-num">15.5</span>Сфальсифіковані результати тестування — кримінальна відповідальність за ст. 318 ККУ. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 16 маркування упаковка етикетка thc попередження">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 16</span>
+          <span class="article-title-text">Маркування продукції</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Упаковка з чіткою етикеткою: склад, доза THC/CBD, дата, виробник, номер партії. Обов'язкове попередження про ризики. Заборона яскравих знаків для підлітків.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">16.1</span>Кожна упаковка містить: назву продукту, вміст THC та CBD (%), виробника, дату виробництва та придатності, номер партії, QR-код сертифіката.</li>
+            <li><span class="sp-num">16.2</span>Обов'язкове попередження: «Канабіс може викликати залежність. Заборонено до 21 року. Не вживати перед водінням.» Шрифт мінімум 10pt, чорний на білому.</li>
+            <li><span class="sp-num">16.3</span>Заборонено яскраві кольори, анімовані зображення, персонажі або будь-яке оформлення, що може приваблювати неповнолітніх.</li>
+            <li><span class="sp-num">16.4</span>Вся упаковка — нейтральна (чорна, бежева або сіра). Шаблон упаковки затверджується АКК.</li>
+            <li><span class="sp-num">16.5</span>Порушення вимог маркування: штраф 5000–15 000 ₴, вилучення партії. <span class="penalty-tag penalty-admin">Адмін</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 28 екологічна безпека органічні стандарти гмо добрива">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 28</span>
+          <span class="article-title-text">Екологічна безпека</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Агровиробники: органічні стандарти, заборона ГМО без акредитації, обмеження добрив, оцінка впливу на екологію (EIA) для великих плантацій.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">28.1</span>Аграрні ліцензіати зобов'язані дотримуватись органічних стандартів вирощування: без синтетичних пестицидів, з контрольованим застосуванням добрив.</li>
+            <li><span class="sp-num">28.2</span>Використання генетично модифікованих сортів канабісу заборонено без окремої акредитації від Мінагрополітики.</li>
+            <li><span class="sp-num">28.3</span>Для плантацій площею понад 1 га обов'язкове проведення оцінки впливу на довкілля (EIA) з публічним обговоренням.</li>
+            <li><span class="sp-num">28.4</span>Санкції за екологічні порушення: штраф 50 000–200 000 ₴, ліквідація посівів, анулювання ліцензії. <span class="penalty-tag penalty-license">Ліцензія</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 34 тестування працівників медогляд наркотики">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 34</span>
+          <span class="article-title-text">Тестування працівників</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Працівники галузі проходять регулярні медогляди та тестування на наркотики. Заборонено працювати «під кайфом». За невиконання — призупинення роботи.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">34.1</span>Усі працівники ліцензованих підприємств проходять тестування на наркотики при прийнятті на роботу та щоквартально.</li>
+            <li><span class="sp-num">34.2</span>Позитивний тест під час роботи — негайне відсторонення, призупинення роботи об'єкту до з'ясування обставин.</li>
+            <li><span class="sp-num">34.3</span>Щорічний медогляд: стан серцево-судинної системи, неврологічний скринінг, оцінка ризиків залежності.</li>
+            <li><span class="sp-num">34.4</span>Роботодавець несе відповідальність за систематичний допуск до роботи осіб під впливом. Штраф 20 000 ₴. <span class="penalty-tag penalty-admin">Адмін</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAPTER 5 -->
+  <div class="chapter-group" data-chapter="5">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ V</span>
+      Санкції, правоохоронна діяльність та захист
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 17 реклама заборона спонсорство бренд">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 17</span>
+          <span class="article-title-text">Заборона реклами</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Повна заборона реклами/спонсорства канабіс-продукції. Заборонено зовнішню рекламу, просування бренду, акційні «роздачі». Штрафи для організаторів.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">17.1</span>Повна заборона будь-якої реклами канабісу або канабіс-продуктів у ЗМІ, інтернеті, зовнішніх носіях, транспорті.</li>
+            <li><span class="sp-num">17.2</span>Заборонено спонсорування спортивних, культурних, освітніх або розважальних заходів від канабіс-брендів.</li>
+            <li><span class="sp-num">17.3</span>Заборонено промо-акції, знижки, «подарунки» та інші маркетингові заходи, що стимулюють збільшення споживання.</li>
+            <li><span class="sp-num">17.4</span>Штраф за рекламу: 50 000–200 000 ₴ для юридичних осіб. Призупинення ліцензії на 6 місяців. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">17.5</span>Освітня/попереджувальна комунікація від АКК та МОЗ не є рекламою і дозволена.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 21 адміністративні порушення штрафи ккап">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 21</span>
+          <span class="article-title-text">Адміністративні правопорушення</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Штрафи за несуттєві порушення: продаж/покупка без ID, куріння в забороненому місці тощо. Від 500 до 5000 ₴. Систематичне порушення — анулювання ліцензії на 1 рік.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">21.1</span>Продаж без сканування ID покупця: штраф 5000 ₴ на юридичну особу. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">21.2</span>Куріння в забороненому місці: штраф 500–1000 ₴ + вилучення продукту. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">21.3</span>Зберігання канабісу понад норму без обґрунтування: штраф 1500–3000 ₴. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">21.4</span>Непідключення до системи seed-to-sale у встановлений строк: штраф 10 000 ₴. <span class="penalty-tag penalty-admin">Адмін</span></li>
+            <li><span class="sp-num">21.5</span>Три і більше адміністративних правопорушення протягом 12 місяців: анулювання ліцензії на 1 рік. <span class="penalty-tag penalty-license">Ліцензія</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 22 кримінальна відповідальність нелегальний збут ст307">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 22</span>
+          <span class="article-title-text">Кримінальна відповідальність</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">За повторну/тяжку діяльність поза ліцензією: конфіскація, ст. 307–309 ККУ. Нелегальний збут (ст. 307) — 4–8 років. Захист «здачі» (ч. 4 ст. 307, 309).</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">22.1</span>Нелегальний збут канабісу (без ліцензії, поза реєстром): ст. 307 ККУ, 4–8 років з конфіскацією. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">22.2</span>Рецидив нелегального збуту: ст. 308 ККУ, до 12 років позбавлення волі. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">22.3</span>Зберігання без мети збуту понад норму: ст. 309 ККУ, до 3 років або виправні роботи. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">22.4</span>Добровільна здача нелегального товару до поліції та сприяння слідству звільняє від кримінальної відповідальності (ч. 4 ст. 307 ККУ).</li>
+            <li><span class="sp-num">22.5</span>Залучення неповнолітніх до нелегального обігу — обтяжуюча обставина, максимальний строк покарання.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 23 співпраця поліція task force обшуки чорний ринок">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 23</span>
+          <span class="article-title-text">Співпраця з поліцією</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">АКК та поліція обмінюються інформацією. Drug Task Force для боротьби з «чорним ринком». Обшуки у ліцензіатів — з дозволу суду.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">23.1</span>АКК та Національна поліція укладають Меморандум про взаємодію: спільні рейди, обмін даними, координація слідчих дій.</li>
+            <li><span class="sp-num">23.2</span>Створюється підрозділ Drug Task Force при Управлінні поліції міста: 10–15 офіцерів, спеціалізовані слідчі, аналітики.</li>
+            <li><span class="sp-num">23.3</span>АКК передає поліції щотижневий аналітичний звіт про підозрілі транзакції та аномалії у реєстрі.</li>
+            <li><span class="sp-num">23.4</span>Обшуки у ліцензіатів проводяться виключно за ухвалою слідчого судді, крім випадків безпосередньої небезпеки.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 29 підробки фальсифікація ліцензія голографічний знак">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 29</span>
+          <span class="article-title-text">Боротьба з підробками</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Кримінальна відповідальність (ст. 318–320 ККУ) за фальсифікацію ліцензій чи продукції. Голографічні та водяні знаки. При отруєнні підробкою — ст. 299 ККУ.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">29.1</span>Підробка ліцензій АКК — кримінальна відповідальність за ст. 358 ККУ (підроблення документів). <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">29.2</span>Фальсифікація канабіс-продукту (додавання небезпечних речовин) — ст. 321 ККУ, до 5 років. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">29.3</span>Якщо підроблений продукт завдав шкоди здоров'ю споживача — ст. 299 ККУ (умисне отруєння). <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">29.4</span>Усі офіційні ліцензії та продукти маркуються голографічними знаками АКК, що неможливо підробити без спеціального обладнання.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 30 відповідальність посадовців корупція акк чиновники">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 30</span>
+          <span class="article-title-text">Персональна відповідальність посадовців</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Чиновники і працівники АКК несуть кримінальну та дисциплінарну відповідальність за корупцію, зловживання і витік даних. Службова недбалість — ст. 367 ККУ.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">30.1</span>Отримання хабара від ліцензіата: ст. 368 ККУ, 5–10 років + конфіскація. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">30.2</span>Видача ліцензії з порушенням процедури (корупційна схема): ст. 364 ККУ, до 8 років. <span class="penalty-tag penalty-criminal">Кримінал</span></li>
+            <li><span class="sp-num">30.3</span>Службова недбалість при здійсненні перевірок: ст. 367 ККУ, штраф або до 2 років.</li>
+            <li><span class="sp-num">30.4</span>Витік персональних даних зі системи АКК: дисциплінарна та кримінальна відповідальність.</li>
+            <li><span class="sp-num">30.5</span>Всі транзакції в системі АКК логуються та зберігаються 5 років для аудиту НАБУ та ДАК.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 33 обшуки судовий ордер права затриманих конституція">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 33</span>
+          <span class="article-title-text">Обшуки та права затриманих</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Обшуки — за ухвалою суду. Невідкладне реагування без ордеру — з підвищеною відповідальністю. Права затриманих гарантуються ст. 29–31 Конституції.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">33.1</span>Обшуки у ліцензіатів та фізичних осіб дозволяються виключно за ухвалою слідчого судді (ст. 234 КПК України).</li>
+            <li><span class="sp-num">33.2</span>При невідкладній необхідності (ризик знищення доказів, небезпека для людей) поліція може діяти без ордеру з негайним повідомленням прокурора та суду.</li>
+            <li><span class="sp-num">33.3</span>Права затриманих гарантовані: право на адвоката, право мовчати, право на медичну допомогу — відповідно до ст. 29–31 Конституції України.</li>
+            <li><span class="sp-num">33.4</span>Докази, отримані з порушенням процедури обшуку, є недопустимими в суді (ст. 86 КПК).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 44 адміністративні кримінальні санкції перелік покарання">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 44</span>
+          <span class="article-title-text">Узагальнена таблиця санкцій</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Узагальнено типи порушень і покарань: КпАП ст. 176–177 для дрібних, ст. 307–309 ККУ для серйозних. Кодекс встановлює винятки для ліцензованих дій.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">44.1</span>Дрібні правопорушення (куріння у публічному місці, перевищення дози): КпАП ст. 176–177, штраф 500–2000 ₴.</li>
+            <li><span class="sp-num">44.2</span>Порушення ліцензійних умов: адміністративні санкції + призупинення/анулювання ліцензії АКК.</li>
+            <li><span class="sp-num">44.3</span>Нелегальний обіг, фальсифікація, збут неповнолітнім: ст. 307–309 ККУ, 4–12 років.</li>
+            <li><span class="sp-num">44.4</span>Кодекс не скасовує статті ККУ про наркотики, а встановлює виключення для ліцензованих дій. Будь-яка нелегальна дія — повна кримінальна відповідальність.</li>
+            <li><span class="sp-num">44.5</span>Суд враховує ступінь суспільної небезпечності, повторність та залучення уразливих осіб як обтяжуючі обставини.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 45 контроль перевірки інспектори держпродспоживслужба">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 45</span>
+          <span class="article-title-text">Контроль та перевірки</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Планові/позапланові перевірки АКК + Держпродспоживслужби. Процедура: ухвала суду для обшуку; chain of custody, відео з камер, незалежні експертизи.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">45.1</span>Планові перевірки ліцензіатів: 2 рази на рік. Позапланові — при надходженні скарги або виявленні аномалій у Реєстрі.</li>
+            <li><span class="sp-num">45.2</span>До перевірок залучаються: інспектори АКК, Держпродспоживслужба, санепідемслужба, пожежна охорона.</li>
+            <li><span class="sp-num">45.3</span>Вилучені зразки продукції передаються до акредитованої лабораторії з дотриманням chain of custody (протокол зберігання речових доказів).</li>
+            <li><span class="sp-num">45.4</span>Відеозапис з CCTV ліцензіата є обов'язковим доказовим матеріалом при розгляді справи.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAPTER 6 -->
+  <div class="chapter-group" data-chapter="6">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ VI</span>
+      Соціальні програми та охорона здоров'я
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 18 освітні програми школи внз молодь лекції">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 18</span>
+          <span class="article-title-text">Освітні програми</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Обов'язкові програми в школах і ВНЗ: лекції про фізіологію канабісу, ризики залежності, права та обов'язки. Наукова подача, регулярний моніторинг КМІС.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">18.1</span>МОН затверджує обов'язковий освітній модуль про канабіс для учнів 9–11 класів (2 год/рік) та студентів ВНЗ (1 семестровий курс на вибір).</li>
+            <li><span class="sp-num">18.2</span>Програма охоплює: нейрофізіологія залежності, правовий статус, розпізнавання симптомів зловживання, ресурси допомоги.</li>
+            <li><span class="sp-num">18.3</span>Заборонено «страхові» та пропагандистські підходи. Подача виключно науково обґрунтована, нейтральна.</li>
+            <li><span class="sp-num">18.4</span>Кожні 5 років КМІС або незалежна соціологічна агенція вимірює рівень обізнаності молоді та ставлення до канабісу.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 19 медична підтримка наркологія реабілітація гаряча лінія">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 19</span>
+          <span class="article-title-text">Медична підтримка</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Фінансуються безкоштовні наркологічні послуги: консультації, діагностика залежності. Розширення мережі реабілітаційних центрів (100→200 ліжок). Гаряча лінія.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">19.1</span>Безкоштовні первинні наркологічні консультації доступні у кожній міській поліклініці (без направлення, анонімно).</li>
+            <li><span class="sp-num">19.2</span>Мережа реабілітаційних центрів розширюється з 100 до 200 ліжко-місць протягом перших 3 років дії Кодексу.</li>
+            <li><span class="sp-num">19.3</span>Гаряча лінія психологічної допомоги: 0-800-100-CAN (цілодобово, безкоштовно, анонімно).</li>
+            <li><span class="sp-num">19.4</span>Частина доходів від акцизів (мін. 25%) цільово спрямовується на медичні та реабілітаційні програми.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 20 соціальні служби психологічна підтримка ветерани впо">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 20</span>
+          <span class="article-title-text">Соціальні служби</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Психологічна підтримка, програми працевлаштування для осіб із хронічною залежністю. Додаткова терапія для ветеранів та ВПО.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">20.1</span>Програма соціальної реінтеграції для осіб, що проходять лікування від залежності: психологічна підтримка, допомога у працевлаштуванні.</li>
+            <li><span class="sp-num">20.2</span>Ветерани та ВПО отримують пріоритетний доступ до реабілітаційних програм, включаючи спеціалізовану терапію ПТСР.</li>
+            <li><span class="sp-num">20.3</span>Забезпечується конфіденційність учасників програм (дані не передаються до правоохоронних органів без судового рішення).</li>
+            <li><span class="sp-num">20.4</span>Місто щорічно публікує звіт про ефективність соціальних програм з KPI: кількість учасників, рівень рецидивів, зайнятість.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 24 захист даних gdpr конфіденційність реєстр">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 24</span>
+          <span class="article-title-text">Захист персональних даних</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">GDPR-подібні правила: дані споживачів зберігаються захищено, використовуються лише для контролю. Анонімна статистика для науки. Порушення — адмін відповідальність.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">24.1</span>Персональні дані споживачів (ID, обсяги покупок, адреса) зберігаються в захищеній системі АКК, зашифрованій за стандартом AES-256.</li>
+            <li><span class="sp-num">24.2</span>Доступ до персональних даних — виключно за судовим рішенням або в рамках антикорупційного розслідування.</li>
+            <li><span class="sp-num">24.3</span>Для статистичних та наукових цілей надаються виключно знеособлені агреговані дані.</li>
+            <li><span class="sp-num">24.4</span>Споживач має право запитати свої дані, виправити неточності або видалити акаунт (з видаленням даних за 90 днів).</li>
+            <li><span class="sp-num">24.5</span>Порушення захисту даних: штраф для АКК та посадових осіб за Законом «Про захист персональних даних».</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 25 громадський контроль рада консультаційна публічні звіти">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 25</span>
+          <span class="article-title-text">Громадський контроль</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Консультаційна рада при АКК (лікарі, педагоги, наркологи, бізнес). Щорічні публічні звіти. Громадські обговорення перед ключовими рішеннями.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">25.1</span>При АКК діє Громадська консультаційна рада: 12 осіб (4 медики, 2 педагоги, 2 правники, 2 представники бізнесу, 2 споживачі).</li>
+            <li><span class="sp-num">25.2</span>Рада збирається щоквартально, результати засідань публікуються протягом 10 днів.</li>
+            <li><span class="sp-num">25.3</span>Щорічний публічний звіт АКК містить: кількість ліцензій, обсяги продажів, кількість правопорушень, надходження до бюджету.</li>
+            <li><span class="sp-num">25.4</span>Зміни до Кодексу, що суттєво впливають на права споживачів або бізнесу, виносяться на публічне обговорення строком не менше 30 днів.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAPTER 7 -->
+  <div class="chapter-group" data-chapter="7">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ VII</span>
+      Економічний розвиток та інновації
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 26 гранти інвестиції субсидії стартапи пільги">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 26</span>
+          <span class="article-title-text">Гранти та інвестиції</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Місто надає субсидії та податкові пільги стартапам у канабісній галузі (селекція, фармація, екоферми). Підтримка агрокластерів, екологічних технологій, креативних індустрій.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">26.1</span>Міський бюджет виділяє щорічний грантовий фонд для стартапів у канабісній галузі: 50 млн ₴ у перші 5 років.</li>
+            <li><span class="sp-num">26.2</span>Пріоритетні напрями фінансування: генетична селекція, фармацевтичні препарати, біотехнологія, екологічні технології переробки відходів.</li>
+            <li><span class="sp-num">26.3</span>Пільги для ліцензіатів першої хвилі (перші 50 підприємств): знижена ставка місцевих податків на 30% протягом 3 років.</li>
+            <li><span class="sp-num">26.4</span>Підтримка агрокластерів: пільговий кредит на купівлю/оренду землі та теплиць під ставку 2–3% річних.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 27 туристичні проекти фестивалі green wave глемпінг">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 27</span>
+          <span class="article-title-text">Туристичні проекти</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Ліцензовано фестивалі («Green Wave»), культурні івенти без пропаганди вживання. Безпечні лаунж-зони на фестивалях. Спецзони на узбережжі (глемпінги).</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">27.1</span>Культурно-туристичні заходи, присвячені канабісу (фестивалі, виставки, екскурсії), ліцензуються АКК окремим дозволом на подію.</li>
+            <li><span class="sp-num">27.2</span>На фестивалях обов'язково: безпечні зони для вживання з вентиляцією та охороною, медичний персонал, тести на якість продукту.</li>
+            <li><span class="sp-num">27.3</span>«Спецзони» на узбережжі (глемпінги, арт-парки): виділяються міською радою з особливим режимом ліцензування.</li>
+            <li><span class="sp-num">27.4</span>Іноземні туристи мають право придбати та вжити канабіс у межах тих самих норм, що й резиденти (при пред'явленні паспорта).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 38 фінансування програм акциз цільове направлення">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 38</span>
+          <span class="article-title-text">Фінансування соціальних програм</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Мінімум 20–30% доходів від акцизів/податків — цільово на соцпрограми: освіта 25–30%, медицина 20–30%, транспорт/наука 15–20%, поліція 10–15%, резерв 5–10%.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">38.1</span>Встановлюється цільовий фонд: мінімум 30% від надходжень акцизного податку на канабіс спрямовуються до Фонду соціальних програм.</li>
+            <li><span class="sp-num">38.2</span>Розподіл Фонду: освіта та профілактика — 25–30%; медицина та реабілітація — 20–30%; інфраструктура та НДДКР — 15–20%; безпека (поліція, АКК) — 10–15%; резервний фонд — 5–10%.</li>
+            <li><span class="sp-num">38.3</span>Детальний порядок розподілу затверджується Міською радою щорічно при прийнятті бюджету.</li>
+            <li><span class="sp-num">38.4</span>Нецільове використання коштів Фонду — адміністративна відповідальність посадових осіб та обов'язкове повернення коштів.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHAPTER 8 -->
+  <div class="chapter-group" data-chapter="8">
+    <div class="chapter-header" onclick="toggleChapter(this)">
+      <span class="ch-num">Розділ VIII</span>
+      Прикінцеві, перехідні та міжнародно-правові положення
+      <span class="ch-toggle">▾</span>
+    </div>
+    <div class="chapter-articles">
+
+      <div class="article-item" data-title="стаття 35 моніторинг звітність соціологія kpi kmis">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 35</span>
+          <span class="article-title-text">Моніторинг та звітність</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Щоквартальні соціологічні опитування про ставлення населення, поширеність вживання, ДТП. KPI: % легальних покупців, задоволеність програмою. Публічні звіти кожні 6 міс.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">35.1</span>АКК проводить щоквартальні опитування (мін. 1000 осіб) про: ставлення до легалізації, рівень вживання, обізнаність щодо ризиків.</li>
+            <li><span class="sp-num">35.2</span>МВС щокварталу звітує про: кількість ДТП за участю осіб під впливом, операції проти нелегального ринку, конфіскації.</li>
+            <li><span class="sp-num">35.3</span>Публічний звіт АКК публікується кожні 6 місяців і містить усі KPI у відкритому форматі (CSV + PDF).</li>
+            <li><span class="sp-num">35.4</span>Ключові KPI: частка легального ринку (%); надходження до бюджету; кількість нових робочих місць; частка підлітків, що вперше спробували канабіс (мета: <3%).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 36 взаємодія законодавство наркотичні засоби кку 309">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 36</span>
+          <span class="article-title-text">Взаємодія з іншими законами</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Посилання на ЗУ «Про наркотичні засоби». Підкреслено: ст. 309 ККУ діє, крім виключень Кодексу.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">36.1</span>Кодекс є спеціальним муніципальним актом і застосовується в частині, що не суперечить законам України.</li>
+            <li><span class="sp-num">36.2</span>Дія ст. 307–309 ККУ зберігається для всіх дій, що виходять за межі дозволеного Кодексом.</li>
+            <li><span class="sp-num">36.3</span>У разі виявлення суперечності між Кодексом та законом України перевагу має закон. АКК зупиняє застосування суперечливої норми та ініціює її перегляд.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 37 міжнародні конвенції оон 1961 1971 пілот">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 37</span>
+          <span class="article-title-text">Міжнародні конвенції</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Україна — учасниця конвенцій 1961/1971 рр. Проєкт позиціонується як міський пілот. Звітність ООН про результати.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">37.1</span>Визнається, що Україна є стороною Єдиної конвенції про наркотичні засоби 1961 р. та Конвенції про психотропні речовини 1971 р.</li>
+            <li><span class="sp-num">37.2</span>Цей Кодекс позиціонується як контрольований пілотний муніципальний експеримент з метою збору даних для подальшої реформи на національному рівні.</li>
+            <li><span class="sp-num">37.3</span>Місто зобов'язується звітувати до ВООЗ та відповідних органів ООН про результати пілоту кожні 2 роки.</li>
+            <li><span class="sp-num">37.4</span>При зміні позиції України щодо конвенцій (денонсація або поправки) Кодекс підлягає автоматичному перегляду.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 39 прозорість інформація публічний портал сайт">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 39</span>
+          <span class="article-title-text">Прозорість та відкриті дані</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Уся інформація про виконання Кодексу публікується на офіційному сайті ради. Онлайн-портал для громадських запитів.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">39.1</span>АКК підтримує публічний онлайн-портал: реєстр ліцензіатів, статистика продажів (знеособлена), розподіл штрафів, результати перевірок.</li>
+            <li><span class="sp-num">39.2</span>Громадяни мають право надсилати запити та скарги через портал. Відповідь надається протягом 10 робочих днів.</li>
+            <li><span class="sp-num">39.3</span>Дані публікуються у відкритому форматі (CSV, JSON) для незалежного аналізу дослідниками та журналістами.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 40 конфлікт норм конституція пріоритет законодавство">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 40</span>
+          <span class="article-title-text">Конфлікт норм</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">При суперечності з Конституцією/нац. законодавством — пріоритет національному закону. Механізм: протягом 2 років — нарада експертів + звернення до парламенту.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">40.1</span>Якщо окрема норма Кодексу суперечить Конституції або закону України, вона призупиняється до вирішення колізії.</li>
+            <li><span class="sp-num">40.2</span>Протягом 24 місяців з моменту виявлення конфлікту норм місто організовує публічну нараду з конституційними правниками та звертається до Комітету ВРУ з питань правоохоронної діяльності.</li>
+            <li><span class="sp-num">40.3</span>АКК веде реєстр виявлених колізій та заходів щодо їх вирішення.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 41 форс-мажор надзвичайні ситуації воєнний стан">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 41</span>
+          <span class="article-title-text">Форс-мажор</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Тимчасове призупинення окремих положень при надзвичайних ситуаціях (епідемії, война). Під час воєнного стану — суворий моніторинг, акцент на медичному канабісі для армії.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">41.1</span>При введенні надзвичайного або воєнного стану Міська рада може тимчасово призупинити дію Кодексу повністю або частково.</li>
+            <li><span class="sp-num">41.2</span>Під час воєнного стану ліцензований ринок переходить у режим суворого моніторингу: скорочений режим роботи, заборона туристичних заходів.</li>
+            <li><span class="sp-num">41.3</span>Медичний канабіс для потреб армії та госпіталів може постачатися за спрощеною процедурою закупівлі через АКК.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 42 територіальна юрисдикція міський закон пілот">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 42</span>
+          <span class="article-title-text">Територіальна юрисдикція</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Проєкт діє тільки в межах міста. Держава зберігає монополію на законодавство про наркотики, цей кодекс — обмежений пілот.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">42.1</span>Цей Кодекс є виключно муніципальним актом і поширюється лише на територію міста Ганжубасик Таун у визначених адміністративних межах.</li>
+            <li><span class="sp-num">42.2</span>Транспортування канабісу за межі міста — заборонено навіть для ліцензіатів. Є порушенням ст. 307 ККУ.</li>
+            <li><span class="sp-num">42.3</span>Держава зберігає виключні повноваження щодо зміни кримінального та адміністративного законодавства у сфері наркотиків.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 46 кміс соціологічні опитування молодь вплив ввп">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 46</span>
+          <span class="article-title-text">Соціологічні дослідження (КМІС)</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Соціологічні дослідження кожні 5 років: рівень проб серед молоді, вплив на ВВП, доходи бюджету. Результати — при коригуванні політики.</div>
+          <h4>Підпункти">
+          <ul class="subpoints">
+            <li><span class="sp-num">46.1</span>Кожні 5 років проводиться масштабне соціологічне дослідження (КМІС або незалежна агенція, мін. 3000 осіб).</li>
+            <li><span class="sp-num">46.2</span>Дослідження охоплює: частоту вживання серед різних вікових груп, рівень залежності, економічний ефект легалізації, ставлення до державної політики.</li>
+            <li><span class="sp-num">46.3</span>Результати є обов'язковим аналітичним підґрунтям для перегляду та коригування будь-яких норм Кодексу.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 47 взаємозв'язок ст307-309 ккк ккук дозвіл виключення">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 47</span>
+          <span class="article-title-text">Взаємозв'язок зі ст. 307–309 ККУ</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Дії, не дозволені Кодексом — злочини за ККУ. В межах дозволу — не кримінальне. Вказівки щодо зміни законодавства при успішному пілоті.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">47.1</span>Статті 307–309 ККУ зберігають повну силу щодо всіх дій з канабісом, що виходять за межі Кодексу.</li>
+            <li><span class="sp-num">47.2</span>Дії, здійснені в межах Кодексу (придбання в рамках ліміту, вирощування до 6 рослин, вживання вдома), не є кримінально карними на підставі ст. 307–309 ККУ.</li>
+            <li><span class="sp-num">47.3</span>При успішному завершенні 5-річного пілоту місто звертається до ВРУ з законопроєктом про внесення змін до ст. 307–309 ККУ (додавання виключення для легалізованих ринків).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 48 звітування публікації щорічний звіт аудит мон моз">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 48</span>
+          <span class="article-title-text">Щорічне звітування та публікації</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Щорічний звіт міської ради про економічні результати та соціальні наслідки. Через 5 років — ґрунтовний аудит із залученням МОЗ, МОН.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">48.1</span>АКК публікує щорічний Звіт про реалізацію Кодексу до 1 квітня наступного року.</li>
+            <li><span class="sp-num">48.2</span>Звіт включає: фінансові показники, соціальну статистику, правоохоронні дані, результати соціологічних опитувань, план заходів на наступний рік.</li>
+            <li><span class="sp-num">48.3</span>Через 5 років проводиться незалежний аудит із залученням МОЗ, МОН, МВС та міжнародних експертів ВООЗ.</li>
+            <li><span class="sp-num">48.4</span>Аудит є підставою для рішення Міської ради про продовження, розширення або скасування пілотного проєкту.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 49 заключні положення конституція імплементація міське право">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 49</span>
+          <span class="article-title-text">Заключні положення</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Уся процедура імплементації в конституційних рамках. Після ухвалення Кодекс — невід'ємна частина міського права, публікується офіційно.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">49.1</span>Кодекс відповідає Конституції України та загальним принципам правової держави: рівність перед законом, захист прав і свобод, місцеве самоврядування.</li>
+            <li><span class="sp-num">49.2</span>Після ухвалення Кодекс публікується в офіційному міському вісниках та на веб-сайті Міської ради.</li>
+            <li><span class="sp-num">49.3</span>Тексти підзаконних актів, що конкретизують норми Кодексу (положення про АКК, правила ліцензування тощо), приймаються протягом 6 місяців після набрання чинності.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 50 початок дії набрання чинності перехідний період 6 місяців">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 50</span>
+          <span class="article-title-text">Початок дії Кодексу</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Набирає чинності з моменту затвердження Міською радою. Перехідний період: перші 6 місяців — навчання, тестовий режим системи, видача перших ліцензій.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">50.1</span>Кодекс набирає чинності з дня його офіційного опублікування після затвердження Міською радою.</li>
+            <li><span class="sp-num">50.2</span>Перехідний період (0–6 місяців): навчання поліцейських та інспекторів АКК, тестування системи seed-to-sale, розробка підзаконних актів.</li>
+            <li><span class="sp-num">50.3</span>Перші ліцензії видаються через 6 місяців після набрання чинності після завершення тестового режиму.</li>
+            <li><span class="sp-num">50.4</span>Регулярне споживання канабісу громадянами до видачі ліцензій залишається під дією загального законодавства України.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="article-item" data-title="стаття 51 20 річний план розвиток kpi етапи масштабування">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 51</span>
+          <span class="article-title-text">20-річний план розвитку</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Поетапний план: підготовка (0–5 рр.), запуск ринку (5–10 рр.), масштабування (10–20 рр.). Чіткі KPI по кожному етапу.</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">51.1</span><strong>Етап 1 (0–5 років) — Підготовка:</strong> запуск АКК, видача перших ліцензій, побудова системи seed-to-sale. Ціль: 10% ринку в легальному секторі, 100 млн ₴ надходжень, 1000 нових робочих місць.</li>
+            <li><span class="sp-num">51.2</span><strong>Етап 2 (5–10 років) — Запуск:</strong> розвиток агрокластерів, туристичної інфраструктури, медичної галузі. Ціль: 50% ринку в легальному секторі, 1 млрд ₴, 5000 робочих місць.</li>
+            <li><span class="sp-num">51.3</span><strong>Етап 3 (10–20 років) — Масштабування:</strong> повноцінний легальний ринок, експорт, міжнародне партнерство. Ціль: 80% ринку, 3+ млрд ₴/рік, 15 000+ робочих місць.</li>
+            <li><span class="sp-num">51.4</span>Ціль щодо молоді: частка підлітків (14–18 р.), що вперше спробували канабіс — менше 3% на кожному етапі.</li>
+            <li><span class="sp-num">51.5</span>Перегляд KPI відбувається кожні 5 років на підставі незалежного аудиту.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Articles 43 and remaining -->
+      <div class="article-item" data-title="стаття 43 генеральні положення конституція рівність баланс">
+        <button class="article-trigger" onclick="toggleArticle(this)">
+          <span class="article-num">Ст. 43</span>
+          <span class="article-title-text">Генеральні положення</span>
+          <span class="article-arrow">▶</span>
+        </button>
+        <div class="article-body">
+          <div class="article-summary">Кодекс відповідає Конституції та принципам правової держави: рівність (ст. 24), баланс прав і захист здоров'я (ст. 49), місцевий розвиток (ст. 140).</div>
+          <h4>Підпункти</h4>
+          <ul class="subpoints">
+            <li><span class="sp-num">43.1</span>Кодекс базується на принципі рівності всіх перед законом (ст. 24 Конституції): будь-яка дискримінація за ознаками раси, статі, релігії при застосуванні норм Кодексу — заборонена.</li>
+            <li><span class="sp-num">43.2</span>Права та свободи людини обмежуються Кодексом лише в обсязі, необхідному для охорони здоров'я та суспільного порядку (ст. 64 Конституції).</li>
+            <li><span class="sp-num">43.3</span>Місцеве самоврядування здійснює свої повноваження в рамках Кодексу на підставі ст. 140 Конституції та Закону України «Про місцеве самоврядування».</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /articlesContainer -->
+
+<!-- KPI TABLE -->
+<section id="kpi" class="kpi-section">
+  <div class="section-label">Цільові показники</div>
+  <h2 class="section-title">20-річний план KPI (ст. 51)</h2>
+  <table class="kpi-table">
+    <thead>
+      <tr>
+        <th>Показник</th>
+        <th>Етап 1 (5 р.)</th>
+        <th>Етап 2 (10 р.)</th>
+        <th>Етап 3 (20 р.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Частка легального ринку</td><td class="kpi-val">10%</td><td class="kpi-val">50%</td><td class="kpi-val">80%</td></tr>
+      <tr><td>Надходження до бюджету</td><td class="kpi-val">100 млн ₴</td><td class="kpi-val">1 млрд ₴</td><td class="kpi-val">3+ млрд ₴</td></tr>
+      <tr><td>Нові робочі місця</td><td class="kpi-val">1 000</td><td class="kpi-val">5 000</td><td class="kpi-val">15 000+</td></tr>
+      <tr><td>Підлітки, що вперше спробували (%)</td><td class="kpi-val">&lt;3%</td><td class="kpi-val">&lt;3%</td><td class="kpi-val">&lt;3%</td></tr>
+      <tr><td>Реабілітаційні ліжко-місця</td><td class="kpi-val">200</td><td class="kpi-val">350</td><td class="kpi-val">500</td></tr>
+      <tr><td>Кількість ліцензованих підприємств</td><td class="kpi-val">50</td><td class="kpi-val">200</td><td class="kpi-val">500+</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">Ганжубасик Таун</div>
+  <p>Агентство контролю канабісу · Кодекс регулювання канабісу (КРК-2024/51)</p>
+  <p>Документ: Проєкт · Версія 1.0 · Конфіденційність: Публічний</p>
+  <p class="footer-legal">Цей документ є муніципальним пілотним проєктом і не є чинним законодавчим актом. Усі посилання на статті ККУ та КУпАП наведено виключно з інформаційною та дослідницькою метою. Відповідність Конституції України та чинному законодавству підлягає окремій правовій експертизі.</p>
+</footer>
+
+<script>
+  function toggleArticle(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    btn.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  function toggleChapter(header) {
+    const articles = header.nextElementSibling;
+    const isCollapsed = header.classList.contains('collapsed');
+    header.classList.toggle('collapsed', !isCollapsed);
+    articles.style.display = isCollapsed ? '' : 'none';
+  }
+
+  function filterChapter(chapter, btn) {
+    document.querySelectorAll('.chapter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.chapter-group').forEach(g => {
+      g.style.display = (chapter === 'all' || g.dataset.chapter === chapter) ? '' : 'none';
+    });
+  }
+
+  function filterArticles(query) {
+    const q = query.toLowerCase().trim();
+    document.querySelectorAll('.article-item').forEach(item => {
+      const title = item.dataset.title || '';
+      const text = item.textContent.toLowerCase();
+      item.style.display = (!q || title.includes(q) || text.includes(q)) ? '' : 'none';
+    });
+    if (q) {
+      document.querySelectorAll('.chapter-group').forEach(g => {
+        const visible = [...g.querySelectorAll('.article-item')].some(i => i.style.display !== 'none');
+        g.style.display = visible ? '' : 'none';
+      });
+    } else {
+      document.querySelectorAll('.chapter-group').forEach(g => g.style.display = '');
+    }
+  }
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
