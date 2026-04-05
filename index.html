@@ -584,7 +584,21 @@
     border: 2px solid var(--gold-light);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
   }
-  .rickroll-frame {
+  .rickroll-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 76px;
+    padding: 18px 72px 12px;
+    background: linear-gradient(180deg, rgba(216,31,31,0.22) 0%, rgba(26,58,26,0.92) 100%);
+    color: #fff4f4;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .rickroll-video {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -1923,15 +1937,15 @@
 <div class="rickroll-overlay" id="rickrollOverlay" aria-hidden="true">
   <div class="rickroll-modal">
     <button type="button" class="rickroll-close" id="rickrollClose" aria-label="Закрити">×</button>
-    <iframe
-      class="rickroll-frame"
-      id="rickrollFrame"
-      title="Never Gonna Give You Up"
-      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-      allowfullscreen
-      referrerpolicy="strict-origin-when-cross-origin"
-      src=""
-    ></iframe>
+    <div class="rickroll-head">Ти все-таки натиснув</div>
+    <video
+      class="rickroll-video"
+      id="rickrollVideo"
+      preload="auto"
+      playsinline
+      controls
+      src="assets/rickroll.mp4"
+    ></video>
   </div>
 </div>
 
@@ -1985,25 +1999,29 @@
 
   const rickrollButton = document.getElementById('rickrollButton');
   const rickrollOverlay = document.getElementById('rickrollOverlay');
-  const rickrollFrame = document.getElementById('rickrollFrame');
+  const rickrollVideo = document.getElementById('rickrollVideo');
   const rickrollClose = document.getElementById('rickrollClose');
-  const rickrollUrl = 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&playsinline=1';
 
   function closeRickroll() {
-    if (!rickrollOverlay || !rickrollFrame) return;
+    if (!rickrollOverlay || !rickrollVideo) return;
     rickrollOverlay.classList.remove('open');
     rickrollOverlay.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('no-scroll');
-    rickrollFrame.src = '';
+    rickrollVideo.pause();
+    rickrollVideo.currentTime = 0;
   }
 
   if (rickrollButton) {
     rickrollButton.addEventListener('click', function() {
-      if (!rickrollOverlay || !rickrollFrame) return;
+      if (!rickrollOverlay || !rickrollVideo) return;
       rickrollOverlay.classList.add('open');
       rickrollOverlay.setAttribute('aria-hidden', 'false');
       document.body.classList.add('no-scroll');
-      rickrollFrame.src = rickrollUrl;
+      rickrollVideo.currentTime = 0;
+      const playPromise = rickrollVideo.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function() {});
+      }
     });
   }
 
