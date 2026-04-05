@@ -541,6 +541,31 @@
     margin-right: auto;
     line-height: 1.7;
   }
+  .danger-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 22px;
+    padding: 12px 24px;
+    border: 1px solid #ff8c8c;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #d81f1f 0%, #9f1111 100%);
+    color: #fff7f7;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  }
+  .danger-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.26);
+    filter: brightness(1.06);
+  }
+  .danger-button:active { transform: translateY(0); }
 
   /* ── SEARCH ── */
   .search-bar {
@@ -1850,6 +1875,7 @@
   <div class="footer-title">Ганжубасик Таун</div>
   <p>Агентство контролю канабісу · Кодекс регулювання канабісу (КРК-2024/51)</p>
   <p>Документ: Проєкт · Версія 1.0 · Конфіденційність: Публічний</p>
+  <button type="button" class="danger-button" id="rickrollButton">НЕ НАТИСКАТИ</button>
   <p class="footer-legal">Цей документ є муніципальним пілотним проєктом і не є чинним законодавчим актом. Усі посилання на статті ККУ та КУпАП наведено виключно з інформаційною та дослідницькою метою. Відповідність Конституції України та чинному законодавству підлягає окремій правовій експертизі.</p>
 </footer>
 
@@ -1900,6 +1926,13 @@
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   });
+
+  const rickrollButton = document.getElementById('rickrollButton');
+  if (rickrollButton) {
+    rickrollButton.addEventListener('click', function() {
+      window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    });
+  }
 </script>
 </body>
 </html>
