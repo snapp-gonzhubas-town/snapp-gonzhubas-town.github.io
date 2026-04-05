@@ -566,6 +566,47 @@
     filter: brightness(1.06);
   }
   .danger-button:active { transform: translateY(0); }
+  .rickroll-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(6, 10, 8, 0.9);
+    z-index: 9999;
+  }
+  .rickroll-overlay.open { display: flex; }
+  .rickroll-modal {
+    width: min(100%, 960px);
+    position: relative;
+    background: #000;
+    border: 2px solid var(--gold-light);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  }
+  .rickroll-frame {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    background: #000;
+  }
+  .rickroll-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ffd7d7;
+    border-radius: 999px;
+    background: #a01313;
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.34);
+  }
+  body.no-scroll { overflow: hidden; }
 
   /* ── SEARCH ── */
   .search-bar {
@@ -1879,6 +1920,21 @@
   <p class="footer-legal">Цей документ є муніципальним пілотним проєктом і не є чинним законодавчим актом. Усі посилання на статті ККУ та КУпАП наведено виключно з інформаційною та дослідницькою метою. Відповідність Конституції України та чинному законодавству підлягає окремій правовій експертизі.</p>
 </footer>
 
+<div class="rickroll-overlay" id="rickrollOverlay" aria-hidden="true">
+  <div class="rickroll-modal">
+    <button type="button" class="rickroll-close" id="rickrollClose" aria-label="Закрити">×</button>
+    <iframe
+      class="rickroll-frame"
+      id="rickrollFrame"
+      title="Never Gonna Give You Up"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+      src=""
+    ></iframe>
+  </div>
+</div>
+
 <script>
   function toggleArticle(btn) {
     const body = btn.nextElementSibling;
@@ -1928,11 +1984,42 @@
   });
 
   const rickrollButton = document.getElementById('rickrollButton');
+  const rickrollOverlay = document.getElementById('rickrollOverlay');
+  const rickrollFrame = document.getElementById('rickrollFrame');
+  const rickrollClose = document.getElementById('rickrollClose');
+  const rickrollUrl = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
+
+  function closeRickroll() {
+    if (!rickrollOverlay || !rickrollFrame) return;
+    rickrollOverlay.classList.remove('open');
+    rickrollOverlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+    rickrollFrame.src = '';
+  }
+
   if (rickrollButton) {
     rickrollButton.addEventListener('click', function() {
-      window.location.replace('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0');
+      if (!rickrollOverlay || !rickrollFrame) return;
+      rickrollOverlay.classList.add('open');
+      rickrollOverlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('no-scroll');
+      rickrollFrame.src = rickrollUrl;
     });
   }
+
+  if (rickrollClose) {
+    rickrollClose.addEventListener('click', closeRickroll);
+  }
+
+  if (rickrollOverlay) {
+    rickrollOverlay.addEventListener('click', function(e) {
+      if (e.target === rickrollOverlay) closeRickroll();
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeRickroll();
+  });
 </script>
 </body>
 </html>
