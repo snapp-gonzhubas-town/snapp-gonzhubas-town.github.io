@@ -20,6 +20,9 @@ const config = Object.assign(
   window.GandjSupportConfig || {}
 );
 
+const tokenFromQuery = new URLSearchParams(window.location.search).get('token');
+const tokenFromHash = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('token');
+const urlAdminToken = tokenFromQuery || tokenFromHash || '';
 const telegramApp = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
 if (telegramApp) {
   telegramApp.ready();
@@ -73,8 +76,9 @@ function operatorHeaders() {
   if (telegramApp && telegramApp.initData) {
     headers['X-Telegram-Init-Data'] = telegramApp.initData;
   }
-  if (config.adminToken) {
-    headers.Authorization = `Bearer ${config.adminToken}`;
+  const bearerToken = urlAdminToken || config.adminToken;
+  if (bearerToken) {
+    headers.Authorization = `Bearer ${bearerToken}`;
   }
   return headers;
 }

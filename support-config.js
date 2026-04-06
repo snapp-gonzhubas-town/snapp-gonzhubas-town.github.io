@@ -1,6 +1,6 @@
 window.GandjSupportConfig = Object.assign(
   {
-    apiBase: '',
+    apiBase: 'https://babbf3db746ce3.lhr.life',
     adminUrl: 'support-admin.html',
     widgetTitle: 'Підтримка',
     widgetSubtitle: 'АКК / Ганжубасик Таун',
