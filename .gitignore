@@ -1,2 +1,10 @@
 .DS_Store
 Thumbs.db
+__pycache__/
+support-backend.db
+support-backend.db-shm
+support-backend.db-wal
+support-backend.log
+support-backend.pid
+support-tunnel.log
+support-tunnel.pid
