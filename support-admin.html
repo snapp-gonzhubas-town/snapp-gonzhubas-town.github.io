@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Підтримка АКК — Панель оператора</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="support-admin.css">
+</head>
+<body>
+  <div class="admin-app">
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <div class="admin-brand-badge">АКК</div>
+        <div class="admin-brand-copy">
+          <strong>Підтримка АКК</strong>
+          <span>Telegram Mini App / операторська панель</span>
+        </div>
+      </div>
+
+      <label class="admin-search">
+        <span>Пошук чату</span>
+        <input type="search" id="adminSearch" placeholder="Ім'я, номер або текст..." autocomplete="off">
+      </label>
+
+      <div class="admin-sidebar-meta">
+        <span class="admin-pill" id="adminModeBadge">Підключення</span>
+        <span class="admin-pill admin-pill-muted" id="adminSyncBadge">Очікування</span>
+      </div>
+
+      <div class="admin-chat-list" id="adminChatList"></div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-main-header">
+        <button type="button" class="admin-back" id="adminBackButton" aria-label="Назад">←</button>
+        <div class="admin-chat-headings">
+          <strong id="adminChatTitle">Оберіть чат</strong>
+          <span id="adminChatMeta">Тут з'являться звернення з сайту.</span>
+        </div>
+        <button type="button" class="admin-expand" id="adminExpandButton" aria-label="Розгорнути">⤢</button>
+      </header>
+
+      <section class="admin-stream" id="adminStream">
+        <div class="admin-empty" id="adminEmptyState">
+          Вибери чат зліва. Якщо API ще не підключене, сторінка все одно працює в локальному демо-режимі.
+        </div>
+      </section>
+
+      <form class="admin-compose" id="adminComposeForm">
+        <textarea id="adminComposeInput" class="admin-compose-input" placeholder="Відповідь операторa..." maxlength="1200"></textarea>
+        <div class="admin-compose-row">
+          <div class="admin-compose-hint">У Mini App ця сторінка може відкриватися як окремий месенджер. Веб-клієнт синхронізується з API, якщо воно налаштоване.</div>
+          <button type="submit" class="admin-send" id="adminSendButton">Відправити</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="support-config.js"></script>
+  <script type="module" src="support-admin.js"></script>
+</body>
+</html>
