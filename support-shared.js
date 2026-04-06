@@ -269,8 +269,8 @@ export function deleteLocalMessage(sessionId, messageId, actorRole = 'visitor') 
   if (actorRole === 'visitor' && message.role !== 'visitor') return null;
   if (actorRole === 'support' && message.role !== 'support') return null;
 
-  const actor = message.role === 'visitor' ? 'пользователь' : 'оператор';
-  message.text = `${actor} ${message.authorLabel || 'без имени'} удалил сообщение`;
+  const actor = message.role === 'visitor' ? 'користувач' : 'оператор';
+  message.text = `${actor} ${message.authorLabel || 'без імені'} видалив повідомлення`;
   message.source = 'deleted';
   message.deletedAt = nowIso();
   message.deletedByRole = actorRole;

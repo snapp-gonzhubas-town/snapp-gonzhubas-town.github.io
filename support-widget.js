@@ -28,6 +28,9 @@ const config = Object.assign(
   window.GandjSupportConfig || {}
 );
 
+const SNOOP_GIF_URL = 'https://media.giphy.com/media/XgXZ4LiyVKoM7Ikk1B/giphy.gif';
+const SNOOP_AUDIO_URL = 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/58/53/c1/5853c174-820d-96dc-0cc4-7319efef43b2/mzaf_11149216817889125218.plus.aac.p.m4a';
+
 const state = {
   identity: getSupportIdentity(),
   session: null,
@@ -42,6 +45,7 @@ const state = {
   typingTimer: 0,
   lastEffectAt: '',
   seenEffects: new Set(),
+  activeEffectAudio: null,
   bootstrapped: false,
   busy: false,
   statusNote: 'Відповідаємо прямо тут. На телефоні чат відкривається на весь екран.'
@@ -129,9 +133,9 @@ function scrollMessagesToBottom() {
 function updateStatus() {
   const labels = {
     connecting: 'Підключення',
-    remote: 'Онлайн API',
+    remote: 'API онлайн',
     demo: 'Локальний демо',
-    degraded: 'Локальний fallback'
+    degraded: 'Локальний резерв'
   };
   modeBadge.textContent = labels[state.mode] || 'Підтримка';
   visitorBadge.textContent = state.identity.shortLabel;
@@ -152,12 +156,12 @@ function formatOperatorPresence() {
   const operator = state.presence && state.presence.operator;
   if (!operator) return config.widgetSubtitle;
   if (operator.lastTypingAt && Date.now() - new Date(operator.lastTypingAt).getTime() < 6500) {
-    return 'Печатает...';
+    return 'Друкує...';
   }
   const minutes = minutesAgo(operator.lastSeenAt);
   if (minutes === null) return 'Не в мережі';
-  if (minutes <= 1) return 'В мережі';
-  if (minutes < 60) return `В мережі ${minutes} хв тому`;
+  if (minutes <= 1) return 'У мережі';
+  if (minutes < 60) return `У мережі ${minutes} хв тому`;
   const hours = Math.round(minutes / 60);
   return `Був у мережі ${hours} год тому`;
 }
@@ -177,8 +181,8 @@ function markLatestEffect(effect) {
 }
 
 function effectCardHtml(effect) {
-  const title = escapeHtml(effect.title || 'Показ почався');
-  const message = escapeHtml(effect.message || 'На екрані зараз буде прикол.');
+  const title = escapeHtml(effect.title || 'Режим Snoop');
+  const message = escapeHtml(effect.message || 'Snoop Dogg вже на сцені.');
   return `
     <div class="support-livefx-card">
       <strong>${title}</strong>
@@ -187,84 +191,58 @@ function effectCardHtml(effect) {
   `;
 }
 
-function spawnFloatingPieces(className, glyphs) {
-  const layer = document.createElement('div');
-  layer.className = `support-livefx-layer ${className}`;
-  for (let index = 0; index < 28; index += 1) {
-    const piece = document.createElement('span');
-    piece.textContent = glyphs[index % glyphs.length];
-    piece.style.left = `${Math.random() * 100}%`;
-    piece.style.animationDelay = `${Math.random() * 1.2}s`;
-    piece.style.animationDuration = `${5 + Math.random() * 4}s`;
-    piece.style.fontSize = `${18 + Math.random() * 20}px`;
-    layer.appendChild(piece);
+function stopEffectAudio() {
+  if (!state.activeEffectAudio) return;
+  try {
+    state.activeEffectAudio.pause();
+    state.activeEffectAudio.currentTime = 0;
+  } catch (error) {
+    // Ignore audio cleanup errors.
   }
-  liveFx.appendChild(layer);
-  window.setTimeout(() => layer.remove(), 9000);
+  state.activeEffectAudio.remove();
+  state.activeEffectAudio = null;
 }
 
-function spawnSpotlight(effect) {
-  const layer = document.createElement('div');
-  layer.className = 'support-livefx-layer support-livefx-layer-spotlight';
-  layer.innerHTML = effectCardHtml(effect);
-  liveFx.appendChild(layer);
-  window.setTimeout(() => layer.remove(), 9000);
+function startSnoopAudio() {
+  stopEffectAudio();
+  const audio = document.createElement('audio');
+  audio.src = SNOOP_AUDIO_URL;
+  audio.preload = 'auto';
+  audio.volume = 0.8;
+  audio.setAttribute('playsinline', 'playsinline');
+  liveFx.appendChild(audio);
+  state.activeEffectAudio = audio;
+  audio.play().catch(() => {});
+  window.setTimeout(() => {
+    if (state.activeEffectAudio === audio) {
+      stopEffectAudio();
+    }
+  }, 32000);
 }
 
-function spawnAlarm(effect) {
+function spawnSnoopMode(effect) {
+  liveFx.querySelectorAll('.support-livefx-layer').forEach(node => node.remove());
   const layer = document.createElement('div');
-  layer.className = 'support-livefx-layer support-livefx-layer-alarm';
-  layer.innerHTML = effectCardHtml(effect);
-  liveFx.appendChild(layer);
-  if (navigator.vibrate) {
-    navigator.vibrate([90, 80, 90]);
-  }
-  window.setTimeout(() => layer.remove(), 7000);
-}
-
-function spawnMatrix(effect) {
-  const layer = document.createElement('div');
-  layer.className = 'support-livefx-layer support-livefx-layer-matrix';
-  const phrases = ['ЖМИ-ЖМИ-ЖМИ', 'ГАНЖУБАС', 'СЮДИ ДИВИСЬ', 'ПОКАЗ ЙДЕ', effect.title || 'МАТРИЦЯ'];
+  layer.className = 'support-livefx-layer support-livefx-layer-snoop';
   layer.innerHTML = `
-    <div class="support-livefx-matrix-grid">
-      ${phrases.map(item => `<span>${escapeHtml(item)}</span>`).join('')}
+    <div class="support-livefx-snoop-glow"></div>
+    <div class="support-livefx-snoop-card">
+      <img class="support-livefx-snoop-gif" src="${SNOOP_GIF_URL}" alt="Snoop Dogg">
+      ${effectCardHtml(effect)}
+      <div class="support-livefx-snoop-note">На фоні запускається короткий офіційний preview-трек.</div>
     </div>
-    ${effectCardHtml(effect)}
   `;
   liveFx.appendChild(layer);
-  window.setTimeout(() => layer.remove(), 9000);
-}
-
-function spawnToast(effect) {
-  const layer = document.createElement('div');
-  layer.className = 'support-livefx-layer support-livefx-layer-toast';
-  layer.innerHTML = effectCardHtml(effect);
-  liveFx.appendChild(layer);
-  window.setTimeout(() => layer.remove(), 6000);
+  startSnoopAudio();
+  window.setTimeout(() => layer.remove(), 16000);
 }
 
 function playEffect(effect) {
   if (!effect || !effect.effectId || state.seenEffects.has(effect.effectId)) return;
   state.seenEffects.add(effect.effectId);
   markLatestEffect(effect);
-  switch (effect.effectType) {
-    case 'burst':
-      spawnToast(effect);
-      spawnFloatingPieces('support-livefx-layer-burst', ['✦', '✷', '❋', '✺', '🍃', '⚡']);
-      break;
-    case 'alarm':
-      spawnAlarm(effect);
-      break;
-    case 'matrix':
-      spawnMatrix(effect);
-      break;
-    case 'spotlight':
-      spawnSpotlight(effect);
-      break;
-    default:
-      spawnToast(effect);
-      break;
+  if (effect.effectType === 'snoop') {
+    spawnSnoopMode(effect);
   }
 }
 
@@ -280,7 +258,7 @@ function bubbleHtml(message) {
   const text = escapeHtml(message.text).replace(/\n/g, '<br>');
   const deletedClass = message.deletedAt ? ' support-bubble-deleted' : '';
   const deleteButton = canDeleteVisitorMessage(message)
-    ? `<button type="button" class="support-message-delete" data-message-delete="${escapeHtml(message.messageId)}">Удалить</button>`
+    ? `<button type="button" class="support-message-delete" data-message-delete="${escapeHtml(message.messageId)}">Видалити</button>`
     : '';
   return `
     <div class="support-row ${roleClass}">
@@ -323,7 +301,7 @@ function renderMessages() {
           <div class="support-row support support-row-typing">
             <article class="support-bubble support-bubble-typing">
               <div class="support-bubble-author">${escapeHtml(config.supportName)}</div>
-              <div class="support-typing-dots" aria-label="Печатает">
+              <div class="support-typing-dots" aria-label="Друкує">
                 <span></span><span></span><span></span>
               </div>
             </article>
@@ -490,7 +468,7 @@ async function sendMessage(rawText) {
           meta: buildSupportMeta()
         }
       });
-      state.statusNote = 'Повідомлення надіслано. Чекаємо відповідь оператора.';
+      state.statusNote = 'Повідомлення надіслано. Чекаємо на відповідь оператора.';
     } else {
       appendLocalMessage(state.session.sessionId, {
         role: 'visitor',
@@ -649,6 +627,8 @@ window.addEventListener('storage', () => {
     loadMessages().catch(() => {});
   }
 });
+
+window.addEventListener('beforeunload', stopEffectAudio);
 
 updateStatus();
 updateTextareaHeight();

@@ -46,32 +46,11 @@ const state = {
 
 const EFFECT_PRESETS = [
   {
-    effectType: 'burst',
-    label: 'Дощ',
-    blurb: 'Листя і іскри по всьому екрану',
-    title: 'ГАНЖУБАС ДОЩ',
-    message: 'Тримай атмосферу.'
-  },
-  {
-    effectType: 'alarm',
-    label: 'Тривога',
-    blurb: 'Червоний спалах і велике оголошення',
-    title: 'УВАГА',
-    message: 'Срочно дивись на екран.'
-  },
-  {
-    effectType: 'matrix',
-    label: 'Матриця',
-    blurb: 'Зелений глітч-режим для показу',
-    title: 'МАТРИЦЯ',
-    message: 'Система заговорила.'
-  },
-  {
-    effectType: 'spotlight',
-    label: 'Фокус',
-    blurb: 'Темна виньетка и подсветка сообщения',
-    title: 'УСІ СЮДИ',
-    message: 'Тут зараз найважливіше.'
+    effectType: 'snoop',
+    label: 'Режим Snoop',
+    blurb: 'GIF зі Snoop Dogg і фоновий трек',
+    title: 'Режим Snoop',
+    message: 'Snoop Dogg уже в ефірі.'
   }
 ];
 
@@ -102,9 +81,9 @@ function updateComposerHeight() {
 function setMode(mode, syncLabel) {
   const labels = {
     connecting: 'Підключення',
-    remote: 'Онлайн API',
+    remote: 'API онлайн',
     demo: 'Локальний демо',
-    degraded: 'Локальний fallback'
+    degraded: 'Локальний резерв'
   };
   state.mode = mode;
   state.syncLabel = syncLabel || state.syncLabel;
@@ -185,8 +164,8 @@ function relativePresence(value) {
   if (!value) return { text: 'не в мережі', className: '' };
   const diffMs = Date.now() - new Date(value).getTime();
   const minutes = Math.max(0, Math.round(diffMs / 60000));
-  if (minutes <= 1) return { text: 'в мережі', className: 'online' };
-  if (minutes < 60) return { text: `в мережі ${minutes} хв тому`, className: '' };
+  if (minutes <= 1) return { text: 'у мережі', className: 'online' };
+  if (minutes < 60) return { text: `у мережі ${minutes} хв тому`, className: '' };
   const hours = Math.round(minutes / 60);
   return { text: `був у мережі ${hours} год тому`, className: '' };
 }
@@ -197,7 +176,7 @@ function currentVisitorPresenceLabel() {
     return { text: 'Відкрий чат, щоб побачити статус.', className: '' };
   }
   if (visitor.lastTypingAt && Date.now() - new Date(visitor.lastTypingAt).getTime() < 6500) {
-    return { text: 'Печатает...', className: 'typing' };
+    return { text: 'друкує...', className: 'typing' };
   }
   return relativePresence(visitor.lastSeenAt);
 }
@@ -272,7 +251,7 @@ function renderChatList() {
     const visitorPresence = chat.presence && chat.presence.visitor ? chat.presence.visitor : null;
     const visitorTypingFresh = visitorPresence && visitorPresence.lastTypingAt && Date.now() - new Date(visitorPresence.lastTypingAt).getTime() < 6500;
     const presence = visitorTypingFresh
-      ? { text: 'печатает...', className: 'typing' }
+      ? { text: 'друкує...', className: 'typing' }
       : relativePresence(visitorPresence && visitorPresence.lastSeenAt);
     return `
       <button type="button" class="admin-chat-card${active}" data-chat-id="${escapeHtml(chat.sessionId)}">
@@ -332,7 +311,7 @@ function renderMessages() {
     const text = escapeHtml(message.text).replace(/\n/g, '<br>');
     const deletedClass = message.deletedAt ? ' deleted' : '';
     const deleteButton = canDeleteOperatorMessage(message)
-      ? `<button type="button" class="admin-message-delete" data-message-delete="${escapeHtml(message.messageId)}">Удалить</button>`
+      ? `<button type="button" class="admin-message-delete" data-message-delete="${escapeHtml(message.messageId)}">Видалити</button>`
       : '';
     return `${divider}
       <div class="admin-message-row ${roleClass}">
@@ -355,7 +334,7 @@ function renderMessages() {
         <div class="admin-message-row visitor">
           <article class="admin-message-bubble admin-message-bubble-typing">
             <div class="admin-message-author">${escapeHtml(state.currentSession.displayName || 'Гість')}</div>
-            <div class="admin-typing-dots" aria-label="Печатает">
+            <div class="admin-typing-dots" aria-label="Друкує">
               <span></span><span></span><span></span>
             </div>
           </article>
@@ -385,7 +364,7 @@ async function loadChats() {
     }
   } catch (error) {
     state.chats = sortChats(listLocalSessions());
-    setMode('degraded', 'Fallback');
+    setMode('degraded', 'Резерв');
   }
 
   renderChatList();
@@ -475,21 +454,21 @@ async function deleteMessage(messageId) {
       await apiRequest(`/api/operator/chats/${encodeURIComponent(state.currentSession.sessionId)}/messages/${encodeURIComponent(messageId)}/delete`, {
         method: 'POST'
       });
-      flashSyncLabel('Сообщение удалено');
+      flashSyncLabel('Повідомлення видалено');
     } else {
       deleteLocalMessage(state.currentSession.sessionId, messageId, 'support');
     }
     await loadChats();
     await openChat(state.currentSession.sessionId);
   } catch (error) {
-    flashSyncLabel('Не вышло удалить', 3200);
+    flashSyncLabel('Не вдалося видалити', 3200);
   }
 }
 
 async function triggerEffect(effectType, scope) {
   const preset = EFFECT_PRESETS.find(item => item.effectType === effectType);
   if (!preset || state.mode !== 'remote') {
-    flashSyncLabel('Приколи тільки онлайн', 3200);
+    flashSyncLabel('Режим працює лише онлайн', 3200);
     return;
   }
   if (scope === 'session' && !state.currentSession) {
@@ -510,9 +489,9 @@ async function triggerEffect(effectType, scope) {
         }
       }
     });
-    flashSyncLabel(scope === 'all' ? 'Прикол для всіх відправлено' : 'Адресний прикол відправлено');
+    flashSyncLabel(scope === 'all' ? 'Режим Snoop увімкнено для всіх' : 'Режим Snoop увімкнено адресно');
   } catch (error) {
-    flashSyncLabel('Прикол не вилетів', 3200);
+    flashSyncLabel('Не вдалося ввімкнути режим', 3200);
   }
 }
 

@@ -65,9 +65,63 @@
 .support-livefx-layer-toast,
 .support-livefx-layer-spotlight,
 .support-livefx-layer-alarm,
-.support-livefx-layer-matrix {
+.support-livefx-layer-matrix,
+.support-livefx-layer-snoop {
   display: grid;
   place-items: center;
+}
+
+.support-livefx-layer-snoop {
+  background:
+    radial-gradient(circle at center, rgba(143, 255, 112, 0.1), rgba(0, 0, 0, 0) 28%),
+    linear-gradient(180deg, rgba(5, 15, 7, 0.62), rgba(5, 15, 7, 0.74));
+  animation: supportFxFade 16s ease forwards;
+}
+
+.support-livefx-snoop-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(201, 168, 76, 0.16), rgba(201, 168, 76, 0) 30%),
+    radial-gradient(circle at 80% 20%, rgba(143, 255, 112, 0.22), rgba(143, 255, 112, 0) 34%),
+    radial-gradient(circle at center, rgba(143, 255, 112, 0.08), rgba(143, 255, 112, 0) 44%);
+  filter: blur(10px);
+}
+
+.support-livefx-snoop-card {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 520px);
+  padding: 18px;
+  border-radius: 28px;
+  border: 1px solid rgba(201, 168, 76, 0.32);
+  background: rgba(12, 29, 13, 0.92);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+}
+
+.support-livefx-snoop-gif {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 1px solid rgba(201, 168, 76, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.support-livefx-snoop-card .support-livefx-card {
+  max-width: none;
+  margin-top: 14px;
+  background: rgba(19, 43, 20, 0.92);
+}
+
+.support-livefx-snoop-note {
+  margin-top: 12px;
+  color: #d9dfc5;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
 }
 
 .support-livefx-layer-toast {
