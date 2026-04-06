@@ -33,10 +33,12 @@ const state = {
   chats: [],
   currentSession: null,
   messages: [],
+  presence: { visitor: null, operator: null },
   search: '',
   mode: config.apiBase ? 'connecting' : 'demo',
   syncLabel: telegramApp ? 'Telegram Mini App' : 'Браузер',
   pollTimer: 0,
+  typingTimer: 0,
   busy: false
 };
 
@@ -48,6 +50,7 @@ const modeBadge = document.getElementById('adminModeBadge');
 const syncBadge = document.getElementById('adminSyncBadge');
 const titleNode = document.getElementById('adminChatTitle');
 const metaNode = document.getElementById('adminChatMeta');
+const presenceNode = document.getElementById('adminPresenceMeta');
 const backButton = document.getElementById('adminBackButton');
 const expandButton = document.getElementById('adminExpandButton');
 const composeForm = document.getElementById('adminComposeForm');
@@ -69,6 +72,27 @@ function setMode(mode, syncLabel) {
   state.mode = mode;
   modeBadge.textContent = labels[mode] || 'Панель';
   syncBadge.textContent = syncLabel || state.syncLabel;
+}
+
+function relativePresence(value) {
+  if (!value) return { text: 'не в мережі', className: '' };
+  const diffMs = Date.now() - new Date(value).getTime();
+  const minutes = Math.max(0, Math.round(diffMs / 60000));
+  if (minutes <= 1) return { text: 'в мережі', className: 'online' };
+  if (minutes < 60) return { text: `в мережі ${minutes} хв тому`, className: '' };
+  const hours = Math.round(minutes / 60);
+  return { text: `був у мережі ${hours} год тому`, className: '' };
+}
+
+function currentVisitorPresenceLabel() {
+  const visitor = state.presence && state.presence.visitor;
+  if (!visitor) {
+    return { text: 'Відкрий чат, щоб побачити статус.', className: '' };
+  }
+  if (visitor.lastTypingAt && Date.now() - new Date(visitor.lastTypingAt).getTime() < 6500) {
+    return { text: 'Печатает...', className: 'typing' };
+  }
+  return relativePresence(visitor.lastSeenAt);
 }
 
 function operatorHeaders() {
@@ -130,6 +154,11 @@ function renderChatList() {
     const preview = escapeHtml((chat.lastMessagePreview || 'Без повідомлень').slice(0, 96));
     const unread = Number(chat.unreadOperatorCount || 0);
     const active = state.currentSession && state.currentSession.sessionId === chat.sessionId ? ' active' : '';
+    const visitorPresence = chat.presence && chat.presence.visitor ? chat.presence.visitor : null;
+    const visitorTypingFresh = visitorPresence && visitorPresence.lastTypingAt && Date.now() - new Date(visitorPresence.lastTypingAt).getTime() < 6500;
+    const presence = visitorTypingFresh
+      ? { text: 'печатает...', className: 'typing' }
+      : relativePresence(visitorPresence && visitorPresence.lastSeenAt);
     return `
       <button type="button" class="admin-chat-card${active}" data-chat-id="${escapeHtml(chat.sessionId)}">
         <div class="admin-chat-row">
@@ -138,7 +167,7 @@ function renderChatList() {
         </div>
         <div class="admin-chat-preview">${preview}</div>
         <div class="admin-chat-meta">
-          <span>${escapeHtml(chat.shortLabel || chat.visitorId || '')}</span>
+          <span class="admin-chat-status ${presence.className}">${escapeHtml(presence.text)}</span>
           ${unread ? `<span class="admin-unread">${unread}</span>` : '<span></span>'}
         </div>
       </button>
@@ -153,12 +182,21 @@ function renderMessages() {
     stream.appendChild(emptyState);
     titleNode.textContent = 'Оберіть чат';
     metaNode.textContent = 'Тут з\'являться звернення з сайту.';
+    if (presenceNode) {
+      presenceNode.textContent = 'Відкрий чат, щоб побачити статус.';
+      presenceNode.className = 'admin-chat-presence';
+    }
     return;
   }
 
   emptyState.hidden = true;
   titleNode.textContent = state.currentSession.displayName || state.currentSession.shortLabel || 'Гість';
   metaNode.textContent = `${state.currentSession.shortLabel || ''} · ${state.currentSession.visitorId || ''}`;
+  if (presenceNode) {
+    const presence = currentVisitorPresenceLabel();
+    presenceNode.textContent = presence.text;
+    presenceNode.className = `admin-chat-presence ${presence.className}`.trim();
+  }
 
   let previousDay = '';
   stream.innerHTML = state.messages.map(message => {
@@ -176,6 +214,23 @@ function renderMessages() {
         </article>
       </div>`;
   }).join('');
+
+  const visitor = state.presence && state.presence.visitor;
+  if (visitor && visitor.lastTypingAt && Date.now() - new Date(visitor.lastTypingAt).getTime() < 6500) {
+    stream.insertAdjacentHTML(
+      'beforeend',
+      `
+        <div class="admin-message-row visitor">
+          <article class="admin-message-bubble admin-message-bubble-typing">
+            <div class="admin-message-author">${escapeHtml(state.currentSession.displayName || 'Гість')}</div>
+            <div class="admin-typing-dots" aria-label="Печатает">
+              <span></span><span></span><span></span>
+            </div>
+          </article>
+        </div>
+      `
+    );
+  }
 
   requestAnimationFrame(() => {
     stream.scrollTop = stream.scrollHeight;
@@ -214,6 +269,8 @@ async function openChat(sessionId) {
       const payload = await apiRequest(`/api/operator/chats/${encodeURIComponent(sessionId)}/messages`);
       state.currentSession = payload.session;
       state.messages = sortMessages(payload.messages || []);
+      state.presence = payload.presence || state.presence;
+      await sendOperatorPresence(false, sessionId);
     } else {
       markLocalSessionRead(sessionId, 'operator');
       state.currentSession = getLocalSession(sessionId);
@@ -247,6 +304,7 @@ async function sendReply(rawText) {
             : 'Оператор'
         }
       });
+      await sendOperatorPresence(false, state.currentSession.sessionId);
     } else {
       appendLocalMessage(state.currentSession.sessionId, {
         role: 'support',
@@ -267,9 +325,35 @@ async function sendReply(rawText) {
   }
 }
 
+async function sendOperatorPresence(typing = false, sessionId = null) {
+  if (!config.apiBase) return;
+  const activeSessionId = sessionId === null
+    ? (state.currentSession && state.currentSession.sessionId) || ''
+    : sessionId;
+  if (!activeSessionId) return;
+  try {
+    const payload = await apiRequest('/api/operator/presence', {
+      method: 'POST',
+      body: {
+        activeSessionId,
+        typing
+      }
+    });
+    if (payload && payload.presence) {
+      state.presence = payload.presence;
+      renderMessages();
+    }
+  } catch (error) {
+    // Ignore transient presence failures.
+  }
+}
+
 function startPolling() {
   window.clearInterval(state.pollTimer);
   state.pollTimer = window.setInterval(async () => {
+    if (state.currentSession && state.mode === 'remote') {
+      await sendOperatorPresence(false, state.currentSession.sessionId);
+    }
     await loadChats();
     if (state.currentSession) {
       await openChat(state.currentSession.sessionId);
@@ -294,6 +378,14 @@ composeForm.addEventListener('submit', event => {
 });
 
 composeInput.addEventListener('input', updateComposerHeight);
+composeInput.addEventListener('input', () => {
+  if (state.mode !== 'remote' || !state.currentSession) return;
+  window.clearTimeout(state.typingTimer);
+  sendOperatorPresence(Boolean(composeInput.value.trim()), state.currentSession.sessionId);
+  state.typingTimer = window.setTimeout(() => {
+    sendOperatorPresence(false, state.currentSession && state.currentSession.sessionId);
+  }, 1800);
+});
 composeInput.addEventListener('keydown', event => {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault();
@@ -335,6 +427,9 @@ window.addEventListener('storage', () => {
 
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
+    if (state.currentSession && state.mode === 'remote') {
+      sendOperatorPresence(false, state.currentSession.sessionId);
+    }
     loadChats();
     if (state.currentSession) openChat(state.currentSession.sessionId);
   }

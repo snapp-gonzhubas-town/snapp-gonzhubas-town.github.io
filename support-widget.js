@@ -31,11 +31,13 @@ const state = {
   identity: getSupportIdentity(),
   session: null,
   messages: [],
+  presence: { operator: null, visitor: null },
   mode: config.apiBase ? 'connecting' : 'demo',
   open: false,
   expanded: false,
   pollTimer: 0,
   autoReplyTimer: 0,
+  typingTimer: 0,
   bootstrapped: false,
   busy: false,
   statusNote: 'Відповідаємо прямо тут. На телефоні чат відкривається на весь екран.'
@@ -54,7 +56,7 @@ root.innerHTML = `
             <div class="support-avatar">П</div>
             <div class="support-heading">
               <strong>${escapeHtml(config.supportName)}</strong>
-              <span>${escapeHtml(config.widgetSubtitle)}</span>
+              <span id="supportPresenceLine">${escapeHtml(config.widgetSubtitle)}</span>
             </div>
           </div>
           <div class="support-toolbar">
@@ -97,6 +99,7 @@ const fab = root.querySelector('#supportFab');
 const modeBadge = root.querySelector('#supportModeBadge');
 const visitorBadge = root.querySelector('#supportVisitorBadge');
 const statusNote = root.querySelector('#supportStatusNote');
+const presenceLine = root.querySelector('#supportPresenceLine');
 const messagesNode = root.querySelector('#supportMessages');
 const composeForm = root.querySelector('#supportComposeForm');
 const textarea = root.querySelector('#supportTextarea');
@@ -127,6 +130,30 @@ function updateStatus() {
   modeBadge.textContent = labels[state.mode] || 'Підтримка';
   visitorBadge.textContent = state.identity.shortLabel;
   statusNote.textContent = state.statusNote;
+  if (presenceLine) {
+    presenceLine.textContent = formatOperatorPresence();
+  }
+}
+
+function minutesAgo(value) {
+  if (!value) return null;
+  const diffMs = Date.now() - new Date(value).getTime();
+  if (Number.isNaN(diffMs) || diffMs < 0) return 0;
+  return Math.round(diffMs / 60000);
+}
+
+function formatOperatorPresence() {
+  const operator = state.presence && state.presence.operator;
+  if (!operator) return config.widgetSubtitle;
+  if (operator.lastTypingAt && Date.now() - new Date(operator.lastTypingAt).getTime() < 6500) {
+    return 'Печатает...';
+  }
+  const minutes = minutesAgo(operator.lastSeenAt);
+  if (minutes === null) return 'Не в мережі';
+  if (minutes <= 1) return 'В мережі';
+  if (minutes < 60) return `В мережі ${minutes} хв тому`;
+  const hours = Math.round(minutes / 60);
+  return `Був у мережі ${hours} год тому`;
 }
 
 function bubbleHtml(message) {
@@ -160,6 +187,25 @@ function renderMessages() {
       return `${dayDivider}${bubbleHtml(message)}`;
     })
     .join('');
+
+  if (state.presence && state.presence.operator && state.presence.operator.lastTypingAt) {
+    const typingMs = Date.now() - new Date(state.presence.operator.lastTypingAt).getTime();
+    if (typingMs >= 0 && typingMs < 6500) {
+      messagesNode.insertAdjacentHTML(
+        'beforeend',
+        `
+          <div class="support-row support support-row-typing">
+            <article class="support-bubble support-bubble-typing">
+              <div class="support-bubble-author">${escapeHtml(config.supportName)}</div>
+              <div class="support-typing-dots" aria-label="Печатает">
+                <span></span><span></span><span></span>
+              </div>
+            </article>
+          </div>
+        `
+      );
+    }
+  }
   scrollMessagesToBottom();
 }
 
@@ -219,6 +265,22 @@ async function apiRequest(path, options = {}) {
   return response.json();
 }
 
+async function sendPresence(typing) {
+  if (!config.apiBase) return;
+  await ensureSession();
+  if (!state.session) return;
+  try {
+    const payload = await apiRequest(`/api/support/session/${encodeURIComponent(state.session.sessionId)}/presence`, {
+      method: 'POST',
+      body: { typing }
+    });
+    state.presence = payload.presence || state.presence;
+    updateStatus();
+  } catch (error) {
+    // Ignore transient presence failures.
+  }
+}
+
 async function ensureSession() {
   if (state.session) return state.session;
 
@@ -255,6 +317,7 @@ async function loadMessages() {
     const payload = await apiRequest(`/api/support/session/${encodeURIComponent(state.session.sessionId)}/messages`);
     state.session = payload.session || state.session;
     state.messages = sortMessages(payload.messages || []);
+    state.presence = payload.presence || state.presence;
   } else {
     markLocalSessionRead(state.session.sessionId, 'visitor');
     state.session = getLocalSession(state.session.sessionId) || ensureLocalDemoSession(state.identity);
@@ -296,6 +359,7 @@ async function sendMessage(rawText) {
           meta: buildSupportMeta()
         }
       });
+      state.statusNote = 'Повідомлення надіслано. Чекаємо відповідь оператора.';
     } else {
       appendLocalMessage(state.session.sessionId, {
         role: 'visitor',
@@ -322,6 +386,9 @@ function startPolling() {
   stopPolling();
   state.pollTimer = window.setInterval(() => {
     if (!state.open) return;
+    if (state.mode === 'remote') {
+      sendPresence(false).catch(() => {});
+    }
     loadMessages().catch(() => {});
   }, Number(config.pollInterval) || 12000);
 }
@@ -337,6 +404,9 @@ async function bootstrapWidget() {
   if (!state.bootstrapped) {
     state.bootstrapped = true;
     updateStatus();
+  }
+  if (state.mode === 'remote') {
+    await sendPresence(false);
   }
   await loadMessages();
 }
@@ -361,6 +431,14 @@ composeForm.addEventListener('submit', event => {
 });
 
 textarea.addEventListener('input', updateTextareaHeight);
+textarea.addEventListener('input', () => {
+  if (state.mode !== 'remote') return;
+  window.clearTimeout(state.typingTimer);
+  sendPresence(Boolean(textarea.value.trim())).catch(() => {});
+  state.typingTimer = window.setTimeout(() => {
+    sendPresence(false).catch(() => {});
+  }, 1800);
+});
 textarea.addEventListener('keydown', event => {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault();
@@ -383,6 +461,9 @@ window.addEventListener('resize', () => {
 
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden && state.open) {
+    if (state.mode === 'remote') {
+      sendPresence(false).catch(() => {});
+    }
     loadMessages().catch(() => {});
   }
 });
