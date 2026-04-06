@@ -429,18 +429,18 @@
     transition: opacity 0.24s ease;
   }
   .article-item:last-child { border-bottom: none; }
-  .article-item:hover,
-  .article-item:focus-within {
+  .article-item:not(.article-expanded):hover,
+  .article-item:not(.article-expanded):focus-within {
     transform: translateY(-2px);
     box-shadow: 0 14px 26px rgba(15, 26, 14, 0.09);
     z-index: 2;
   }
-  .article-item:hover::before,
-  .article-item:focus-within::before {
+  .article-item:not(.article-expanded):hover::before,
+  .article-item:not(.article-expanded):focus-within::before {
     opacity: 1;
   }
-  .article-item:hover::after,
-  .article-item:focus-within::after {
+  .article-item:not(.article-expanded):hover::after,
+  .article-item:not(.article-expanded):focus-within::after {
     opacity: 1;
   }
   .article-trigger {
@@ -539,44 +539,44 @@
     margin-top: 3px;
     transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), color 0.22s ease;
   }
-  .article-item:hover .article-main,
-  .article-item:focus-within .article-main {
+  .article-item:not(.article-expanded):hover .article-main,
+  .article-item:not(.article-expanded):focus-within .article-main {
     transform: translateX(5px);
   }
-  .article-item:hover .article-num,
-  .article-item:focus-within .article-num {
+  .article-item:not(.article-expanded):hover .article-num,
+  .article-item:not(.article-expanded):focus-within .article-num {
     transform: translateY(-1px);
     background-color: #f3ecdc;
     border-color: rgba(61, 122, 61, 0.22);
     color: var(--green-mid);
   }
-  .article-item:hover .article-title-text,
-  .article-item:focus-within .article-title-text {
+  .article-item:not(.article-expanded):hover .article-title-text,
+  .article-item:not(.article-expanded):focus-within .article-title-text {
     color: var(--green-mid);
   }
-  .article-item:hover .article-preview,
-  .article-item:focus-within .article-preview {
+  .article-item:not(.article-expanded):hover .article-preview,
+  .article-item:not(.article-expanded):focus-within .article-preview {
     color: #4f4a38;
   }
-  .article-item:hover .article-chip,
-  .article-item:focus-within .article-chip {
+  .article-item:not(.article-expanded):hover .article-chip,
+  .article-item:not(.article-expanded):focus-within .article-chip {
     transform: translateY(-1px);
     background: rgba(122, 184, 122, 0.14);
     border-color: rgba(61, 122, 61, 0.24);
   }
-  .article-item:hover .article-chip-muted,
-  .article-item:focus-within .article-chip-muted {
+  .article-item:not(.article-expanded):hover .article-chip-muted,
+  .article-item:not(.article-expanded):focus-within .article-chip-muted {
     background: rgba(201, 168, 76, 0.14);
     border-color: rgba(201, 168, 76, 0.28);
   }
-  .article-item:hover .article-trigger:not(.open) .article-arrow,
-  .article-item:focus-within .article-trigger:not(.open) .article-arrow {
+  .article-item:not(.article-expanded):hover .article-trigger:not(.open) .article-arrow,
+  .article-item:not(.article-expanded):focus-within .article-trigger:not(.open) .article-arrow {
     transform: translateX(4px);
     color: var(--gold);
   }
   .article-trigger.open .article-arrow { transform: rotate(90deg); }
-  .article-item:hover .article-trigger.open .article-arrow,
-  .article-item:focus-within .article-trigger.open .article-arrow {
+  .article-item:not(.article-expanded):hover .article-trigger.open .article-arrow,
+  .article-item:not(.article-expanded):focus-within .article-trigger.open .article-arrow {
     transform: rotate(90deg) translateX(4px);
     color: var(--gold);
   }
@@ -2287,8 +2287,10 @@
 
   function toggleArticle(btn) {
     const body = btn.nextElementSibling;
+    const item = btn.closest('.article-item');
     const isOpen = body.classList.contains('open');
     btn.classList.toggle('open', !isOpen);
+    if (item) item.classList.toggle('article-expanded', !isOpen);
     if (isOpen) {
       closeArticle(body);
     } else {
