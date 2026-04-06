@@ -2195,18 +2195,37 @@
     });
   }
 
+  function keepAutoHeightAfterTransition(element, shouldStayOpen) {
+    const handleTransitionEnd = event => {
+      if (event.target !== element || event.propertyName !== 'max-height') return;
+      if (shouldStayOpen(element)) {
+        element.style.maxHeight = 'none';
+      }
+      element.removeEventListener('transitionend', handleTransitionEnd);
+    };
+    element.addEventListener('transitionend', handleTransitionEnd);
+  }
+
+  function queueHeightSync() {
+    requestAnimationFrame(syncOpenArticleHeights);
+    setTimeout(syncOpenArticleHeights, 180);
+    setTimeout(syncOpenArticleHeights, 420);
+  }
+
   function syncOpenChapterHeights() {
     document.querySelectorAll('.chapter-group').forEach(group => {
       if (group.style.display === 'none') return;
       const header = group.querySelector('.chapter-header');
       const articles = header ? header.nextElementSibling : null;
       if (!header || !articles || header.classList.contains('collapsed')) return;
+      if (articles.style.maxHeight === 'none') return;
       articles.style.maxHeight = `${articles.scrollHeight}px`;
     });
   }
 
   function syncOpenArticleHeights() {
     document.querySelectorAll('.article-body.open').forEach(body => {
+      if (body.style.maxHeight === 'none') return;
       body.style.maxHeight = `${body.scrollHeight}px`;
     });
     syncOpenChapterHeights();
@@ -2217,7 +2236,8 @@
     body.style.maxHeight = '0px';
     requestAnimationFrame(() => {
       body.style.maxHeight = `${body.scrollHeight}px`;
-      requestAnimationFrame(syncOpenChapterHeights);
+      keepAutoHeightAfterTransition(body, element => element.classList.contains('open'));
+      queueHeightSync();
     });
   }
 
@@ -2226,7 +2246,7 @@
     requestAnimationFrame(() => {
       body.classList.remove('open');
       body.style.maxHeight = '0px';
-      requestAnimationFrame(syncOpenChapterHeights);
+      queueHeightSync();
     });
   }
 
@@ -2236,6 +2256,8 @@
     articles.style.maxHeight = '0px';
     requestAnimationFrame(() => {
       articles.style.maxHeight = `${articles.scrollHeight}px`;
+      keepAutoHeightAfterTransition(articles, element => !element.classList.contains('collapsed'));
+      queueHeightSync();
     });
   }
 
@@ -2258,7 +2280,7 @@
         articles.style.maxHeight = '0px';
       } else {
         articles.classList.remove('collapsed');
-        articles.style.maxHeight = `${articles.scrollHeight}px`;
+        articles.style.maxHeight = 'none';
       }
     });
   }
@@ -2365,6 +2387,7 @@
   setSubpointDelays();
   initChapterAnimations();
   window.addEventListener('resize', syncOpenArticleHeights);
+  queueHeightSync();
 </script>
 </body>
 </html>
