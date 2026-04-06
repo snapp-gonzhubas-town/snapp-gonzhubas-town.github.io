@@ -8,10 +8,10 @@ import {
   getLocalSession,
   getSupportIdentity,
   markLocalSessionRead,
-  maybeCreateLocalAutoReply,
   sanitizeText,
   sortMessages,
-  appendLocalMessage
+  appendLocalMessage,
+  updateLocalPresence
 } from './support-shared.js';
 
 const config = Object.assign(
@@ -42,7 +42,6 @@ const state = {
   expanded: false,
   pollTimer: 0,
   presenceTimer: 0,
-  autoReplyTimer: 0,
   typingTimer: 0,
   lastEffectAt: '',
   seenEffects: new Set(),
@@ -174,6 +173,16 @@ function canDeleteVisitorMessage(message) {
     && !message.deletedAt;
 }
 
+function operatorLabel() {
+  return 'Админ';
+}
+
+function messageAuthorLabel(message) {
+  if (!message) return '';
+  if (message.role === 'support') return operatorLabel();
+  return message.authorLabel || '';
+}
+
 function markLatestEffect(effect) {
   if (!effect || !effect.createdAt) return;
   if (!state.lastEffectAt || new Date(effect.createdAt).getTime() > new Date(state.lastEffectAt).getTime()) {
@@ -244,6 +253,7 @@ function processEffects(effects = []) {
 function bubbleHtml(message) {
   const roleClass = message.role === 'support' ? 'support' : message.role === 'system' ? 'system' : 'visitor';
   const text = escapeHtml(message.text).replace(/\n/g, '<br>');
+  const author = escapeHtml(messageAuthorLabel(message));
   const deletedClass = message.deletedAt ? ' support-bubble-deleted' : '';
   const deleteButton = canDeleteVisitorMessage(message)
     ? `<button type="button" class="support-message-delete" data-message-delete="${escapeHtml(message.messageId)}">Видалити</button>`
@@ -251,7 +261,7 @@ function bubbleHtml(message) {
   return `
     <div class="support-row ${roleClass}">
       <article class="support-bubble${deletedClass}">
-        <div class="support-bubble-author">${escapeHtml(message.authorLabel)}</div>
+        <div class="support-bubble-author">${author}</div>
         <div class="support-bubble-text">${text}</div>
         <div class="support-bubble-actions">
           <div class="support-bubble-meta">${escapeHtml(formatClock(message.createdAt))}</div>
@@ -288,7 +298,7 @@ function renderMessages() {
         `
           <div class="support-row support support-row-typing">
             <article class="support-bubble support-bubble-typing">
-              <div class="support-bubble-author">${escapeHtml(config.supportName)}</div>
+              <div class="support-bubble-author">${escapeHtml(operatorLabel())}</div>
               <div class="support-typing-dots" aria-label="Друкує">
                 <span></span><span></span><span></span>
               </div>
@@ -377,6 +387,14 @@ async function sendPresence(typing) {
   }
 }
 
+function syncLocalPresence(typing = false) {
+  if (!state.session) return;
+  const presence = updateLocalPresence(state.session.sessionId, 'visitor', typing);
+  if (!presence) return;
+  state.presence = presence;
+  updateStatus();
+}
+
 async function ensureSession() {
   if (state.session) return state.session;
 
@@ -402,6 +420,7 @@ async function ensureSession() {
 
   state.mode = state.mode === 'degraded' ? 'degraded' : 'demo';
   state.session = ensureLocalDemoSession(state.identity);
+  state.presence = state.session.presence || state.presence;
   updateStatus();
   return state.session;
 }
@@ -419,22 +438,11 @@ async function loadMessages() {
     markLocalSessionRead(state.session.sessionId, 'visitor');
     state.session = getLocalSession(state.session.sessionId) || ensureLocalDemoSession(state.identity);
     state.messages = sortMessages(state.session.messages || []);
+    state.presence = state.session.presence || state.presence;
   }
 
   updateStatus();
   renderMessages();
-}
-
-function scheduleLocalReply() {
-  window.clearTimeout(state.autoReplyTimer);
-  state.autoReplyTimer = window.setTimeout(async () => {
-    try {
-      maybeCreateLocalAutoReply(state.session.sessionId);
-      await loadMessages();
-    } catch (error) {
-      // Ignore demo reply failures.
-    }
-  }, 900);
 }
 
 async function sendMessage(rawText) {
@@ -464,7 +472,8 @@ async function sendMessage(rawText) {
         text,
         source: 'web'
       });
-      scheduleLocalReply();
+      syncLocalPresence(false);
+      state.statusNote = 'Повідомлення збережено. Админ побачить його в панелі підтримки.';
     }
 
     textarea.value = '';
@@ -501,14 +510,15 @@ async function deleteMessage(messageId) {
 async function backgroundHeartbeat() {
   try {
     await ensureSession();
+    const typingNow = state.open && document.activeElement === textarea && Boolean(textarea.value.trim());
     if (state.mode === 'remote') {
-      const typingNow = state.open && document.activeElement === textarea && Boolean(textarea.value.trim());
       await sendPresence(typingNow);
       if (state.open) {
         await loadMessages();
       }
       return;
     }
+    syncLocalPresence(typingNow);
     if (state.open) {
       await loadMessages();
     }
@@ -577,11 +587,19 @@ composeForm.addEventListener('submit', event => {
 
 textarea.addEventListener('input', updateTextareaHeight);
 textarea.addEventListener('input', () => {
-  if (state.mode !== 'remote') return;
   window.clearTimeout(state.typingTimer);
-  sendPresence(Boolean(textarea.value.trim())).catch(() => {});
+  const typing = Boolean(textarea.value.trim());
+  if (state.mode === 'remote') {
+    sendPresence(typing).catch(() => {});
+  } else {
+    syncLocalPresence(typing);
+  }
   state.typingTimer = window.setTimeout(() => {
-    sendPresence(false).catch(() => {});
+    if (state.mode === 'remote') {
+      sendPresence(false).catch(() => {});
+    } else {
+      syncLocalPresence(false);
+    }
   }, 1800);
 });
 textarea.addEventListener('keydown', event => {

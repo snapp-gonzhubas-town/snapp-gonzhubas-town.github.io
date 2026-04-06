@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <circle cx="24" cy="24" r="23" stroke="#c9a84c" stroke-width="1.5"/>
+  <circle cx="24" cy="24" r="18" stroke="#c9a84c" stroke-width="0.5" stroke-dasharray="2 3"/>
+  <path d="M24 8 C24 8 14 16 14 24 C14 30 18 34 24 36 C30 34 34 30 34 24 C34 16 24 8 24 8Z" fill="#2d5a2d" stroke="#7ab87a" stroke-width="0.8"/>
+  <path d="M24 10 C22 15 18 18 16 22 C16 28 20 32 24 34" stroke="#a8d8a8" stroke-width="0.6"/>
+  <path d="M24 10 C26 15 30 18 32 22 C32 28 28 32 24 34" stroke="#a8d8a8" stroke-width="0.6"/>
+  <path d="M24 10 C24 20 24 28 24 36" stroke="#c9a84c" stroke-width="0.5"/>
+  <circle cx="24" cy="36" r="2" fill="#c9a84c"/>
+  <text x="24" y="46" text-anchor="middle" font-size="5" font-family="serif" fill="#c9a84c">ГТ</text>
+</svg>

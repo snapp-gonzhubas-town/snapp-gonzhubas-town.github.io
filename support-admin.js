@@ -8,7 +8,8 @@ import {
   listLocalSessions,
   markLocalSessionRead,
   sanitizeText,
-  sortMessages
+  sortMessages,
+  updateLocalPresence
 } from './support-shared.js';
 
 const config = Object.assign(
@@ -188,6 +189,16 @@ function canDeleteOperatorMessage(message) {
     && !message.deletedAt;
 }
 
+function operatorLabel() {
+  return 'Админ';
+}
+
+function messageAuthorLabel(message) {
+  if (!message) return '';
+  if (message.role === 'support') return operatorLabel();
+  return message.authorLabel || '';
+}
+
 function operatorHeaders() {
   const headers = { Accept: 'application/json' };
   if (telegramApp && telegramApp.initData) {
@@ -316,7 +327,7 @@ function renderMessages() {
     return `${divider}
       <div class="admin-message-row ${roleClass}">
         <article class="admin-message-bubble${deletedClass}">
-          <div class="admin-message-author">${escapeHtml(message.authorLabel)}</div>
+          <div class="admin-message-author">${escapeHtml(messageAuthorLabel(message))}</div>
           <div class="admin-message-text">${text}</div>
           <div class="admin-message-actions">
             <div class="admin-message-time">${escapeHtml(formatClock(message.createdAt))}</div>
@@ -379,6 +390,7 @@ async function loadChats() {
     const freshCurrent = state.chats.find(chat => chat.sessionId === state.currentSession.sessionId);
     if (freshCurrent) {
       state.currentSession = freshCurrent;
+      state.presence = freshCurrent.presence || state.presence;
       updatePrankTargets();
     }
   }
@@ -396,10 +408,13 @@ async function openChat(sessionId) {
       markLocalSessionRead(sessionId, 'operator');
       state.currentSession = getLocalSession(sessionId);
       state.messages = sortMessages((state.currentSession && state.currentSession.messages) || []);
+      state.presence = (state.currentSession && state.currentSession.presence) || state.presence;
+      syncLocalOperatorPresence(false, sessionId);
     }
   } catch (error) {
     state.currentSession = getLocalSession(sessionId);
     state.messages = sortMessages((state.currentSession && state.currentSession.messages) || []);
+    state.presence = (state.currentSession && state.currentSession.presence) || state.presence;
   }
 
   updateLayoutState();
@@ -421,20 +436,19 @@ async function sendReply(rawText) {
         method: 'POST',
         body: {
           text,
-          authorLabel: telegramApp && telegramApp.initDataUnsafe && telegramApp.initDataUnsafe.user
-            ? telegramApp.initDataUnsafe.user.first_name || 'Оператор'
-            : 'Оператор'
+          authorLabel: operatorLabel()
         }
       });
       await sendOperatorPresence(false, state.currentSession.sessionId);
     } else {
       appendLocalMessage(state.currentSession.sessionId, {
         role: 'support',
-        authorLabel: 'Оператор',
+        authorLabel: operatorLabel(),
         text,
         source: 'webapp'
       });
       markLocalSessionRead(state.currentSession.sessionId, 'operator');
+      syncLocalOperatorPresence(false, state.currentSession.sessionId);
     }
 
     composeInput.value = '';
@@ -518,11 +532,24 @@ async function sendOperatorPresence(typing = false, sessionId = null) {
   }
 }
 
+function syncLocalOperatorPresence(typing = false, sessionId = null) {
+  const activeSessionId = sessionId === null
+    ? (state.currentSession && state.currentSession.sessionId) || ''
+    : sessionId;
+  if (!activeSessionId) return;
+  const presence = updateLocalPresence(activeSessionId, 'operator', typing);
+  if (!presence) return;
+  state.presence = presence;
+  renderMessages();
+}
+
 function startPolling() {
   window.clearInterval(state.pollTimer);
   state.pollTimer = window.setInterval(async () => {
     if (state.currentSession && state.mode === 'remote') {
       await sendOperatorPresence(false, state.currentSession.sessionId);
+    } else if (state.currentSession) {
+      syncLocalOperatorPresence(false, state.currentSession.sessionId);
     }
     await loadChats();
     if (state.currentSession) {
@@ -567,11 +594,20 @@ composeForm.addEventListener('submit', event => {
 
 composeInput.addEventListener('input', updateComposerHeight);
 composeInput.addEventListener('input', () => {
-  if (state.mode !== 'remote' || !state.currentSession) return;
+  if (!state.currentSession) return;
   window.clearTimeout(state.typingTimer);
-  sendOperatorPresence(Boolean(composeInput.value.trim()), state.currentSession.sessionId);
+  const typing = Boolean(composeInput.value.trim());
+  if (state.mode === 'remote') {
+    sendOperatorPresence(typing, state.currentSession.sessionId);
+  } else {
+    syncLocalOperatorPresence(typing, state.currentSession.sessionId);
+  }
   state.typingTimer = window.setTimeout(() => {
-    sendOperatorPresence(false, state.currentSession && state.currentSession.sessionId);
+    if (state.mode === 'remote') {
+      sendOperatorPresence(false, state.currentSession && state.currentSession.sessionId);
+    } else {
+      syncLocalOperatorPresence(false, state.currentSession && state.currentSession.sessionId);
+    }
   }, 1800);
 });
 composeInput.addEventListener('keydown', event => {
@@ -611,6 +647,9 @@ expandButton.addEventListener('click', async () => {
 window.addEventListener('storage', () => {
   if (state.mode !== 'remote') {
     loadChats();
+    if (state.currentSession) {
+      openChat(state.currentSession.sessionId);
+    }
   }
 });
 

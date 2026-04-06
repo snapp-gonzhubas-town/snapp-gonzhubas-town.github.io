@@ -1,11 +1,6 @@
 const SUPPORT_IDENTITY_KEY = 'gandj-support-identity-v1';
 const SUPPORT_DEMO_DB_KEY = 'gandj-support-demo-db-v1';
 const SUPPORT_GREETING = 'Вітаю. Це підтримка АКК. Напишіть, що сталося, і ми продовжимо прямо в цьому чаті.';
-const SUPPORT_AUTO_REPLIES = [
-  'Повідомлення збережено. Оператор побачить його у Telegram-панелі підтримки.',
-  'Прийняли. Якщо треба, уточнення можна просто дописати наступним повідомленням.',
-  'Бачимо запит. Історія діалогу збережена, відповідь можна дати з адмінки.'
-];
 
 function readJSON(key, fallback) {
   try {
@@ -29,6 +24,30 @@ function sortSessions(sessions) {
   return sessions
     .slice()
     .sort((left, right) => new Date(right.lastMessageAt).getTime() - new Date(left.lastMessageAt).getTime());
+}
+
+function normalizePresence(presence = null) {
+  const empty = { visitor: null, operator: null };
+  if (!presence || typeof presence !== 'object') return empty;
+
+  ['visitor', 'operator'].forEach(role => {
+    const entry = presence[role];
+    if (!entry || typeof entry !== 'object') return;
+    empty[role] = {
+      lastSeenAt: entry.lastSeenAt || null,
+      lastTypingAt: entry.lastTypingAt || null
+    };
+  });
+
+  return empty;
+}
+
+function normalizeSession(session) {
+  return {
+    ...session,
+    presence: normalizePresence(session && session.presence),
+    messages: sortMessages(session && session.messages ? session.messages : [])
+  };
 }
 
 export function nowIso() {
@@ -168,6 +187,7 @@ function createDefaultSession(identity) {
     unreadOperatorCount: 0,
     unreadVisitorCount: 1,
     meta: buildSupportMeta(),
+    presence: normalizePresence(),
     messages: [
       {
         messageId: uid('msg'),
@@ -186,6 +206,7 @@ export function readLocalDemoStore() {
   if (!Array.isArray(store.sessions)) {
     store.sessions = [];
   }
+  store.sessions = store.sessions.map(normalizeSession);
   return store;
 }
 
@@ -219,10 +240,7 @@ export function listLocalSessions() {
 
 export function saveLocalSession(session) {
   const store = readLocalDemoStore();
-  const nextSession = {
-    ...session,
-    messages: sortMessages(session.messages || [])
-  };
+  const nextSession = normalizeSession(session);
   const index = store.sessions.findIndex(item => item.sessionId === nextSession.sessionId);
   if (index === -1) {
     store.sessions.unshift(nextSession);
@@ -242,6 +260,7 @@ export function appendLocalMessage(sessionId, message) {
 
   const nextMessage = normalizeMessage(message);
   session.messages = sortMessages([...(session.messages || []), nextMessage]);
+  session.presence = normalizePresence(session.presence);
   session.updatedAt = nextMessage.createdAt;
   session.lastMessageAt = nextMessage.createdAt;
   session.lastMessagePreview = nextMessage.text;
@@ -264,6 +283,7 @@ export function deleteLocalMessage(sessionId, messageId, actorRole = 'visitor') 
   const store = readLocalDemoStore();
   const session = store.sessions.find(item => item.sessionId === sessionId);
   if (!session) return null;
+  session.presence = normalizePresence(session.presence);
   const message = (session.messages || []).find(item => item.messageId === messageId);
   if (!message || message.source === 'system' || message.deletedAt) return null;
   if (actorRole === 'visitor' && message.role !== 'visitor') return null;
@@ -286,6 +306,7 @@ export function markLocalSessionRead(sessionId, audience = 'visitor') {
   const store = readLocalDemoStore();
   const session = store.sessions.find(item => item.sessionId === sessionId);
   if (!session) return null;
+  session.presence = normalizePresence(session.presence);
   if (audience === 'operator') {
     session.unreadOperatorCount = 0;
   } else {
@@ -295,12 +316,17 @@ export function markLocalSessionRead(sessionId, audience = 'visitor') {
   return session;
 }
 
-export function maybeCreateLocalAutoReply(sessionId) {
-  const response = SUPPORT_AUTO_REPLIES[Math.floor(Math.random() * SUPPORT_AUTO_REPLIES.length)];
-  return appendLocalMessage(sessionId, {
-    role: 'support',
-    authorLabel: 'Підтримка АКК',
-    text: response,
-    source: 'demo'
-  });
+export function updateLocalPresence(sessionId, audience = 'visitor', typing = false) {
+  const store = readLocalDemoStore();
+  const session = store.sessions.find(item => item.sessionId === sessionId);
+  if (!session || (audience !== 'visitor' && audience !== 'operator')) return null;
+
+  const timestamp = nowIso();
+  session.presence = normalizePresence(session.presence);
+  session.presence[audience] = {
+    lastSeenAt: timestamp,
+    lastTypingAt: typing ? timestamp : (session.presence[audience] && session.presence[audience].lastTypingAt) || null
+  };
+  writeLocalDemoStore(store);
+  return session.presence;
 }

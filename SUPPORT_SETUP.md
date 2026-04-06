@@ -22,10 +22,11 @@ GitHub Pages подходит для статического сайта и Tele
 2. Размести сайт и `support-admin.html` на GitHub Pages.
 3. Подними `support-worker-template.js` как Cloudflare Worker.
 4. Создай D1 базу и выполни `support-schema.sql`.
-5. Заполни переменные из `support.env.example`.
-6. В `support-config.js` пропиши `apiBase` как URL воркера.
-7. Поставь webhook боту на `/api/telegram/webhook` и передай `TELEGRAM_WEBHOOK_SECRET`, если используешь секрет вебхука.
-8. Через BotFather добавь кнопку или shortcut на `support-admin.html`.
+5. Если база уже существовала раньше, добавь миграцией новые поля и таблицы из `support-schema.sql` (`support_presence`, `support_effects`, soft-delete поля у сообщений).
+6. Заполни переменные из `support.env.example`.
+7. В `support-config.js` пропиши `apiBase` как URL воркера. По умолчанию он пустой, чтобы фронтенд не смотрел в мёртвый tunnel URL.
+8. Поставь webhook боту на `/api/telegram/webhook` и передай `TELEGRAM_WEBHOOK_SECRET`, если используешь секрет вебхука.
+9. Через BotFather добавь кнопку или shortcut на `support-admin.html`.
 
 ## Что получает оператор
 - Список всех чатов с сайта.

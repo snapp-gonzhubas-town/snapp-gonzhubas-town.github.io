@@ -620,14 +620,6 @@ textarea {
     place-items: center;
   }
 
-  body.admin-chat-open .admin-sidebar {
-    display: none;
-  }
-
-  body:not(.admin-chat-open) .admin-main {
-    display: none;
-  }
-
   .admin-compose-row {
     flex-direction: column;
     align-items: stretch;
