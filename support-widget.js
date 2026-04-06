@@ -1,5 +1,6 @@
 import {
   buildSupportMeta,
+  deleteLocalMessage,
   ensureLocalDemoSession,
   escapeHtml,
   formatClock,
@@ -36,8 +37,11 @@ const state = {
   open: false,
   expanded: false,
   pollTimer: 0,
+  presenceTimer: 0,
   autoReplyTimer: 0,
   typingTimer: 0,
+  lastEffectAt: '',
+  seenEffects: new Set(),
   bootstrapped: false,
   busy: false,
   statusNote: 'Відповідаємо прямо тут. На телефоні чат відкривається на весь екран.'
@@ -47,6 +51,7 @@ const root = document.createElement('div');
 root.className = 'support-root';
 root.dataset.open = 'false';
 root.innerHTML = `
+  <div class="support-livefx" id="supportLiveFx" aria-hidden="true"></div>
   <div class="support-backdrop" data-support-action="close"></div>
   <div class="support-dock">
     <div class="support-shell" id="supportShell" aria-hidden="true">
@@ -96,6 +101,7 @@ document.body.appendChild(root);
 
 const shell = root.querySelector('#supportShell');
 const fab = root.querySelector('#supportFab');
+const liveFx = root.querySelector('#supportLiveFx');
 const modeBadge = root.querySelector('#supportModeBadge');
 const visitorBadge = root.querySelector('#supportVisitorBadge');
 const statusNote = root.querySelector('#supportStatusNote');
@@ -156,15 +162,135 @@ function formatOperatorPresence() {
   return `Був у мережі ${hours} год тому`;
 }
 
+function canDeleteVisitorMessage(message) {
+  return Boolean(message)
+    && message.role === 'visitor'
+    && message.source !== 'system'
+    && !message.deletedAt;
+}
+
+function markLatestEffect(effect) {
+  if (!effect || !effect.createdAt) return;
+  if (!state.lastEffectAt || new Date(effect.createdAt).getTime() > new Date(state.lastEffectAt).getTime()) {
+    state.lastEffectAt = effect.createdAt;
+  }
+}
+
+function effectCardHtml(effect) {
+  const title = escapeHtml(effect.title || 'Показ почався');
+  const message = escapeHtml(effect.message || 'На екрані зараз буде прикол.');
+  return `
+    <div class="support-livefx-card">
+      <strong>${title}</strong>
+      <span>${message}</span>
+    </div>
+  `;
+}
+
+function spawnFloatingPieces(className, glyphs) {
+  const layer = document.createElement('div');
+  layer.className = `support-livefx-layer ${className}`;
+  for (let index = 0; index < 28; index += 1) {
+    const piece = document.createElement('span');
+    piece.textContent = glyphs[index % glyphs.length];
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.animationDelay = `${Math.random() * 1.2}s`;
+    piece.style.animationDuration = `${5 + Math.random() * 4}s`;
+    piece.style.fontSize = `${18 + Math.random() * 20}px`;
+    layer.appendChild(piece);
+  }
+  liveFx.appendChild(layer);
+  window.setTimeout(() => layer.remove(), 9000);
+}
+
+function spawnSpotlight(effect) {
+  const layer = document.createElement('div');
+  layer.className = 'support-livefx-layer support-livefx-layer-spotlight';
+  layer.innerHTML = effectCardHtml(effect);
+  liveFx.appendChild(layer);
+  window.setTimeout(() => layer.remove(), 9000);
+}
+
+function spawnAlarm(effect) {
+  const layer = document.createElement('div');
+  layer.className = 'support-livefx-layer support-livefx-layer-alarm';
+  layer.innerHTML = effectCardHtml(effect);
+  liveFx.appendChild(layer);
+  if (navigator.vibrate) {
+    navigator.vibrate([90, 80, 90]);
+  }
+  window.setTimeout(() => layer.remove(), 7000);
+}
+
+function spawnMatrix(effect) {
+  const layer = document.createElement('div');
+  layer.className = 'support-livefx-layer support-livefx-layer-matrix';
+  const phrases = ['ЖМИ-ЖМИ-ЖМИ', 'ГАНЖУБАС', 'СЮДИ ДИВИСЬ', 'ПОКАЗ ЙДЕ', effect.title || 'МАТРИЦЯ'];
+  layer.innerHTML = `
+    <div class="support-livefx-matrix-grid">
+      ${phrases.map(item => `<span>${escapeHtml(item)}</span>`).join('')}
+    </div>
+    ${effectCardHtml(effect)}
+  `;
+  liveFx.appendChild(layer);
+  window.setTimeout(() => layer.remove(), 9000);
+}
+
+function spawnToast(effect) {
+  const layer = document.createElement('div');
+  layer.className = 'support-livefx-layer support-livefx-layer-toast';
+  layer.innerHTML = effectCardHtml(effect);
+  liveFx.appendChild(layer);
+  window.setTimeout(() => layer.remove(), 6000);
+}
+
+function playEffect(effect) {
+  if (!effect || !effect.effectId || state.seenEffects.has(effect.effectId)) return;
+  state.seenEffects.add(effect.effectId);
+  markLatestEffect(effect);
+  switch (effect.effectType) {
+    case 'burst':
+      spawnToast(effect);
+      spawnFloatingPieces('support-livefx-layer-burst', ['✦', '✷', '❋', '✺', '🍃', '⚡']);
+      break;
+    case 'alarm':
+      spawnAlarm(effect);
+      break;
+    case 'matrix':
+      spawnMatrix(effect);
+      break;
+    case 'spotlight':
+      spawnSpotlight(effect);
+      break;
+    default:
+      spawnToast(effect);
+      break;
+  }
+}
+
+function processEffects(effects = []) {
+  effects.forEach(effect => {
+    playEffect(effect);
+    markLatestEffect(effect);
+  });
+}
+
 function bubbleHtml(message) {
   const roleClass = message.role === 'support' ? 'support' : message.role === 'system' ? 'system' : 'visitor';
   const text = escapeHtml(message.text).replace(/\n/g, '<br>');
+  const deletedClass = message.deletedAt ? ' support-bubble-deleted' : '';
+  const deleteButton = canDeleteVisitorMessage(message)
+    ? `<button type="button" class="support-message-delete" data-message-delete="${escapeHtml(message.messageId)}">Удалить</button>`
+    : '';
   return `
     <div class="support-row ${roleClass}">
-      <article class="support-bubble">
+      <article class="support-bubble${deletedClass}">
         <div class="support-bubble-author">${escapeHtml(message.authorLabel)}</div>
         <div class="support-bubble-text">${text}</div>
-        <div class="support-bubble-meta">${escapeHtml(formatClock(message.createdAt))}</div>
+        <div class="support-bubble-actions">
+          <div class="support-bubble-meta">${escapeHtml(formatClock(message.createdAt))}</div>
+          ${deleteButton}
+        </div>
       </article>
     </div>
   `;
@@ -172,7 +298,7 @@ function bubbleHtml(message) {
 
 function renderMessages() {
   if (!state.messages.length) {
-    messagesNode.innerHTML = '<div class="support-empty">Поки що тут порожньо. Напиши повідомлення, і чат одразу почне збирати історію звернення.</div>';
+    messagesNode.innerHTML = '<div class="support-empty">Ти вже в онлайн-списку для оператора. Якщо треба, напиши сюди або просто чекай відповіді прямо в цьому чаті.</div>';
     return;
   }
 
@@ -272,9 +398,13 @@ async function sendPresence(typing) {
   try {
     const payload = await apiRequest(`/api/support/session/${encodeURIComponent(state.session.sessionId)}/presence`, {
       method: 'POST',
-      body: { typing }
+      body: {
+        typing,
+        lastEffectAt: state.lastEffectAt || ''
+      }
     });
     state.presence = payload.presence || state.presence;
+    processEffects(payload.effects || []);
     updateStatus();
   } catch (error) {
     // Ignore transient presence failures.
@@ -295,7 +425,7 @@ async function ensureSession() {
       });
       state.mode = 'remote';
       state.session = payload.session || payload;
-      state.statusNote = 'Онлайн-чат активний. Історія синхронізується з операторською Telegram-панеллю.';
+      state.statusNote = 'Тебе видно оператору навіть до першого повідомлення. Історія синхронізується з Telegram-панеллю.';
       updateStatus();
       return state.session;
     } catch (error) {
@@ -314,10 +444,11 @@ async function loadMessages() {
   await ensureSession();
 
   if (state.mode === 'remote') {
-    const payload = await apiRequest(`/api/support/session/${encodeURIComponent(state.session.sessionId)}/messages`);
+    const payload = await apiRequest(`/api/support/session/${encodeURIComponent(state.session.sessionId)}/messages?after=${encodeURIComponent(state.lastEffectAt || '')}`);
     state.session = payload.session || state.session;
     state.messages = sortMessages(payload.messages || []);
     state.presence = payload.presence || state.presence;
+    processEffects(payload.effects || []);
   } else {
     markLocalSessionRead(state.session.sessionId, 'visitor');
     state.session = getLocalSession(state.session.sessionId) || ensureLocalDemoSession(state.identity);
@@ -382,14 +513,49 @@ async function sendMessage(rawText) {
   }
 }
 
+async function deleteMessage(messageId) {
+  if (!state.session || !messageId) return;
+  try {
+    if (state.mode === 'remote') {
+      await apiRequest(`/api/support/session/${encodeURIComponent(state.session.sessionId)}/messages/${encodeURIComponent(messageId)}/delete`, {
+        method: 'POST'
+      });
+      state.statusNote = 'Повідомлення мʼяко видалено, історія не розсипалася.';
+    } else {
+      deleteLocalMessage(state.session.sessionId, messageId, 'visitor');
+    }
+    updateStatus();
+    await loadMessages();
+  } catch (error) {
+    state.statusNote = 'Не вдалося видалити повідомлення.';
+    updateStatus();
+  }
+}
+
+async function backgroundHeartbeat() {
+  try {
+    await ensureSession();
+    if (state.mode === 'remote') {
+      const typingNow = state.open && document.activeElement === textarea && Boolean(textarea.value.trim());
+      await sendPresence(typingNow);
+      if (state.open) {
+        await loadMessages();
+      }
+      return;
+    }
+    if (state.open) {
+      await loadMessages();
+    }
+  } catch (error) {
+    // Ignore transient background sync failures.
+  }
+}
+
 function startPolling() {
   stopPolling();
   state.pollTimer = window.setInterval(() => {
     if (!state.open) return;
-    if (state.mode === 'remote') {
-      sendPresence(false).catch(() => {});
-    }
-    loadMessages().catch(() => {});
+    backgroundHeartbeat().catch(() => {});
   }, Number(config.pollInterval) || 12000);
 }
 
@@ -411,6 +577,13 @@ async function bootstrapWidget() {
   await loadMessages();
 }
 
+function startPresenceLoop() {
+  if (state.presenceTimer) return;
+  state.presenceTimer = window.setInterval(() => {
+    backgroundHeartbeat().catch(() => {});
+  }, Number(config.pollInterval) || 12000);
+}
+
 root.addEventListener('click', event => {
   const action = event.target.closest('[data-support-action]');
   if (!action) return;
@@ -421,6 +594,12 @@ root.addEventListener('click', event => {
   if (actionName === 'expand') {
     toggleExpanded();
   }
+});
+
+messagesNode.addEventListener('click', event => {
+  const deleteButton = event.target.closest('[data-message-delete]');
+  if (!deleteButton) return;
+  deleteMessage(deleteButton.getAttribute('data-message-delete'));
 });
 
 fab.addEventListener('click', () => setOpen(true));
@@ -460,11 +639,8 @@ window.addEventListener('resize', () => {
 });
 
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && state.open) {
-    if (state.mode === 'remote') {
-      sendPresence(false).catch(() => {});
-    }
-    loadMessages().catch(() => {});
+  if (!document.hidden) {
+    backgroundHeartbeat().catch(() => {});
   }
 });
 
@@ -476,3 +652,7 @@ window.addEventListener('storage', () => {
 
 updateStatus();
 updateTextareaHeight();
+ensureSession().then(() => {
+  backgroundHeartbeat().catch(() => {});
+}).catch(() => {});
+startPresenceLoop();

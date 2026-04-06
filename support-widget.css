@@ -20,6 +20,103 @@
   transition: opacity 0.22s ease;
 }
 
+.support-livefx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.support-livefx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.support-livefx-card {
+  max-width: min(90vw, 460px);
+  padding: 18px 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(201, 168, 76, 0.34);
+  background: rgba(18, 40, 19, 0.92);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+  color: #fff6df;
+  text-align: center;
+}
+
+.support-livefx-card strong,
+.support-livefx-card span {
+  display: block;
+}
+
+.support-livefx-card strong {
+  font-size: clamp(18px, 2vw, 28px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.support-livefx-card span {
+  margin-top: 8px;
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.5;
+  color: #f5ebca;
+}
+
+.support-livefx-layer-toast,
+.support-livefx-layer-spotlight,
+.support-livefx-layer-alarm,
+.support-livefx-layer-matrix {
+  display: grid;
+  place-items: center;
+}
+
+.support-livefx-layer-toast {
+  animation: supportFxFade 6s ease forwards;
+}
+
+.support-livefx-layer-burst span {
+  position: absolute;
+  top: -8vh;
+  color: #f4dc91;
+  text-shadow: 0 0 18px rgba(244, 220, 145, 0.34);
+  animation: supportFxFall linear forwards;
+}
+
+.support-livefx-layer-spotlight {
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.04) 0 18%, rgba(0, 0, 0, 0.6) 48%, rgba(0, 0, 0, 0.78) 100%);
+  animation: supportFxFade 9s ease forwards;
+}
+
+.support-livefx-layer-alarm {
+  background:
+    radial-gradient(circle at center, rgba(255, 96, 96, 0.24), rgba(255, 96, 96, 0) 50%),
+    linear-gradient(180deg, rgba(120, 10, 10, 0.18), rgba(120, 10, 10, 0.04));
+  animation: supportFxAlarm 0.65s ease-in-out 6 alternate;
+}
+
+.support-livefx-layer-matrix {
+  background:
+    linear-gradient(180deg, rgba(10, 30, 12, 0.2), rgba(10, 30, 12, 0.52)),
+    repeating-linear-gradient(180deg, rgba(91, 255, 123, 0.06) 0 2px, rgba(0, 0, 0, 0) 2px 7px);
+  animation: supportFxFade 9s ease forwards;
+}
+
+.support-livefx-matrix-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: center;
+  justify-items: center;
+  gap: 32px 18px;
+  color: rgba(153, 255, 170, 0.22);
+  font-size: clamp(22px, 4vw, 52px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: rotate(-10deg) scale(1.05);
+}
+
 .support-dock {
   position: absolute;
   right: 18px;
@@ -286,6 +383,7 @@
 }
 
 .support-bubble {
+  position: relative;
   max-width: min(82%, 470px);
   padding: 12px 14px;
   border-radius: 20px;
@@ -329,10 +427,51 @@
 }
 
 .support-bubble-meta {
-  margin-top: 8px;
   font-size: 10px;
   letter-spacing: 0.06em;
   opacity: 0.62;
+}
+
+.support-bubble-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.support-message-delete {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  padding: 4px 9px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.support-message-delete:hover,
+.support-message-delete:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.support-bubble-deleted {
+  border-style: dashed !important;
+  opacity: 0.84;
+  box-shadow: none;
+}
+
+.support-bubble-deleted .support-bubble-text {
+  font-style: italic;
+}
+
+.support-bubble-deleted .support-message-delete {
+  display: none;
 }
 
 .support-bubble-typing {
@@ -453,6 +592,41 @@
   }
   40% {
     transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+@keyframes supportFxFall {
+  from {
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, 120vh, 0) rotate(300deg);
+    opacity: 0;
+  }
+}
+
+@keyframes supportFxFade {
+  0%, 12% {
+    opacity: 0;
+  }
+  22%, 70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes supportFxAlarm {
+  from {
+    opacity: 0.18;
+  }
+  to {
     opacity: 1;
   }
 }

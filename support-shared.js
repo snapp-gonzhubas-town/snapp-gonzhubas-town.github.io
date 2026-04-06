@@ -139,6 +139,9 @@ export function normalizeMessage(message) {
     authorLabel: message.authorLabel || 'Гість',
     text: sanitizeText(message.text || ''),
     source: message.source || 'web',
+    deletedAt: message.deletedAt || null,
+    deletedByRole: message.deletedByRole || null,
+    deletedByLabel: message.deletedByLabel || null,
     createdAt: message.createdAt || nowIso()
   };
 }
@@ -255,6 +258,28 @@ export function appendLocalMessage(sessionId, message) {
     session,
     message: nextMessage
   };
+}
+
+export function deleteLocalMessage(sessionId, messageId, actorRole = 'visitor') {
+  const store = readLocalDemoStore();
+  const session = store.sessions.find(item => item.sessionId === sessionId);
+  if (!session) return null;
+  const message = (session.messages || []).find(item => item.messageId === messageId);
+  if (!message || message.source === 'system' || message.deletedAt) return null;
+  if (actorRole === 'visitor' && message.role !== 'visitor') return null;
+  if (actorRole === 'support' && message.role !== 'support') return null;
+
+  const actor = message.role === 'visitor' ? 'пользователь' : 'оператор';
+  message.text = `${actor} ${message.authorLabel || 'без имени'} удалил сообщение`;
+  message.source = 'deleted';
+  message.deletedAt = nowIso();
+  message.deletedByRole = actorRole;
+  message.deletedByLabel = message.authorLabel || '';
+  session.updatedAt = message.deletedAt;
+  session.lastMessageAt = message.deletedAt;
+  session.lastMessagePreview = message.text;
+  writeLocalDemoStore(store);
+  return { session, message };
 }
 
 export function markLocalSessionRead(sessionId, audience = 'visitor') {

@@ -27,6 +27,7 @@
       <div class="admin-sidebar-meta">
         <span class="admin-pill" id="adminModeBadge">Підключення</span>
         <span class="admin-pill admin-pill-muted" id="adminSyncBadge">Очікування</span>
+        <span class="admin-pill admin-pill-muted" id="adminVisitorsBadge">0 на сайті</span>
       </div>
 
       <div class="admin-chat-list" id="adminChatList"></div>
@@ -42,6 +43,23 @@
         </div>
         <button type="button" class="admin-expand" id="adminExpandButton" aria-label="Розгорнути">⤢</button>
       </header>
+
+      <section class="admin-controls">
+        <div class="admin-control-group">
+          <div class="admin-control-copy">
+            <strong>Приколи для всіх</strong>
+            <span>Спрацює для всіх, хто зараз на сайті, навіть якщо вони ще нічого не писали.</span>
+          </div>
+          <div class="admin-prank-grid" id="adminGlobalActions"></div>
+        </div>
+        <div class="admin-control-group">
+          <div class="admin-control-copy">
+            <strong>Для вибраного відвідувача</strong>
+            <span id="adminTargetHint">Оберіть людину в списку, щоб запускати адресно.</span>
+          </div>
+          <div class="admin-prank-grid" id="adminTargetActions"></div>
+        </div>
+      </section>
 
       <section class="admin-stream" id="adminStream">
         <div class="admin-empty" id="adminEmptyState">

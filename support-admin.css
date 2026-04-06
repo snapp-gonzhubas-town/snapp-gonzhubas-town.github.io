@@ -297,6 +297,94 @@ textarea {
   text-transform: uppercase;
 }
 
+.admin-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--admin-border);
+  background: rgba(245, 240, 232, 0.72);
+}
+
+.admin-control-group {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(26, 58, 26, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 12px 24px rgba(15, 26, 14, 0.04);
+}
+
+.admin-control-copy strong,
+.admin-control-copy span {
+  display: block;
+}
+
+.admin-control-copy strong {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #214521;
+}
+
+.admin-control-copy span {
+  margin-top: 4px;
+  color: #5b715b;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.admin-prank-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.admin-prank-button {
+  min-height: 54px;
+  padding: 10px 12px;
+  border: 1px solid rgba(26, 58, 26, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(236, 230, 218, 0.92) 100%);
+  color: #173117;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.admin-prank-button:hover,
+.admin-prank-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(200, 163, 77, 0.34);
+  box-shadow: 0 10px 20px rgba(15, 26, 14, 0.08);
+}
+
+.admin-prank-button:disabled {
+  opacity: 0.46;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.admin-prank-button strong,
+.admin-prank-button span {
+  display: block;
+}
+
+.admin-prank-button strong {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-prank-button span {
+  margin-top: 4px;
+  color: #5f745f;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
 .admin-stream {
   flex: 1;
   min-height: 0;
@@ -340,6 +428,7 @@ textarea {
 }
 
 .admin-message-bubble {
+  position: relative;
   max-width: min(78%, 620px);
   padding: 14px 16px;
   border-radius: 20px;
@@ -378,6 +467,48 @@ textarea {
   margin-top: 8px;
   font-size: 10px;
   opacity: 0.62;
+}
+
+.admin-message-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.admin-message-delete {
+  appearance: none;
+  border: 1px solid rgba(153, 31, 31, 0.16);
+  border-radius: 999px;
+  background: rgba(153, 31, 31, 0.08);
+  color: #8a2323;
+  padding: 4px 10px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.admin-message-delete:hover,
+.admin-message-delete:focus-visible {
+  background: rgba(153, 31, 31, 0.14);
+  transform: translateY(-1px);
+}
+
+.admin-message-bubble.deleted {
+  border-style: dashed;
+  box-shadow: none;
+  opacity: 0.84;
+}
+
+.admin-message-bubble.deleted .admin-message-text {
+  font-style: italic;
+}
+
+.admin-message-bubble.deleted .admin-message-delete {
+  display: none;
 }
 
 .admin-message-bubble-typing {
@@ -480,6 +611,10 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .admin-controls {
+    grid-template-columns: 1fr;
+  }
+
   .admin-back {
     display: inline-grid;
     place-items: center;
@@ -506,5 +641,9 @@ textarea {
 
   .admin-message-bubble {
     max-width: 88%;
+  }
+
+  .admin-prank-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }

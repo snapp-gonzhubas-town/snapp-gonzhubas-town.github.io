@@ -1,5 +1,6 @@
 import {
   appendLocalMessage,
+  deleteLocalMessage,
   escapeHtml,
   formatClock,
   formatDayLabel,
@@ -39,8 +40,40 @@ const state = {
   syncLabel: telegramApp ? 'Telegram Mini App' : 'Браузер',
   pollTimer: 0,
   typingTimer: 0,
+  flashTimer: 0,
   busy: false
 };
+
+const EFFECT_PRESETS = [
+  {
+    effectType: 'burst',
+    label: 'Дощ',
+    blurb: 'Листя і іскри по всьому екрану',
+    title: 'ГАНЖУБАС ДОЩ',
+    message: 'Тримай атмосферу.'
+  },
+  {
+    effectType: 'alarm',
+    label: 'Тривога',
+    blurb: 'Червоний спалах і велике оголошення',
+    title: 'УВАГА',
+    message: 'Срочно дивись на екран.'
+  },
+  {
+    effectType: 'matrix',
+    label: 'Матриця',
+    blurb: 'Зелений глітч-режим для показу',
+    title: 'МАТРИЦЯ',
+    message: 'Система заговорила.'
+  },
+  {
+    effectType: 'spotlight',
+    label: 'Фокус',
+    blurb: 'Темна виньетка и подсветка сообщения',
+    title: 'УСІ СЮДИ',
+    message: 'Тут зараз найважливіше.'
+  }
+];
 
 const chatList = document.getElementById('adminChatList');
 const stream = document.getElementById('adminStream');
@@ -48,11 +81,15 @@ const emptyState = document.getElementById('adminEmptyState');
 const searchInput = document.getElementById('adminSearch');
 const modeBadge = document.getElementById('adminModeBadge');
 const syncBadge = document.getElementById('adminSyncBadge');
+const visitorsBadge = document.getElementById('adminVisitorsBadge');
 const titleNode = document.getElementById('adminChatTitle');
 const metaNode = document.getElementById('adminChatMeta');
 const presenceNode = document.getElementById('adminPresenceMeta');
+const targetHintNode = document.getElementById('adminTargetHint');
 const backButton = document.getElementById('adminBackButton');
 const expandButton = document.getElementById('adminExpandButton');
+const globalActions = document.getElementById('adminGlobalActions');
+const targetActions = document.getElementById('adminTargetActions');
 const composeForm = document.getElementById('adminComposeForm');
 const composeInput = document.getElementById('adminComposeInput');
 const sendButton = document.getElementById('adminSendButton');
@@ -70,8 +107,78 @@ function setMode(mode, syncLabel) {
     degraded: 'Локальний fallback'
   };
   state.mode = mode;
+  state.syncLabel = syncLabel || state.syncLabel;
   modeBadge.textContent = labels[mode] || 'Панель';
-  syncBadge.textContent = syncLabel || state.syncLabel;
+  syncBadge.textContent = state.syncLabel;
+}
+
+function flashSyncLabel(text, timeout = 2600) {
+  syncBadge.textContent = text;
+  window.clearTimeout(state.flashTimer);
+  state.flashTimer = window.setTimeout(() => {
+    syncBadge.textContent = state.syncLabel;
+  }, timeout);
+}
+
+function presenceTimestamp(chat) {
+  return chat && chat.presence && chat.presence.visitor && chat.presence.visitor.lastSeenAt
+    ? new Date(chat.presence.visitor.lastSeenAt).getTime()
+    : 0;
+}
+
+function isChatOnline(chat) {
+  const lastSeen = presenceTimestamp(chat);
+  return Boolean(lastSeen) && Date.now() - lastSeen < 70000;
+}
+
+function sortChats(chats = []) {
+  return chats.slice().sort((left, right) => {
+    const onlineDelta = Number(isChatOnline(right)) - Number(isChatOnline(left));
+    if (onlineDelta) return onlineDelta;
+    const unreadDelta = Number(right.unreadOperatorCount || 0) - Number(left.unreadOperatorCount || 0);
+    if (unreadDelta) return unreadDelta;
+    return Math.max(
+      presenceTimestamp(right),
+      new Date(right.lastMessageAt || 0).getTime()
+    ) - Math.max(
+      presenceTimestamp(left),
+      new Date(left.lastMessageAt || 0).getTime()
+    );
+  });
+}
+
+function updateVisitorBadge() {
+  if (!visitorsBadge) return;
+  const total = state.chats.length;
+  const online = state.chats.filter(chat => isChatOnline(chat)).length;
+  visitorsBadge.textContent = `${online} на сайті · ${total} всього`;
+}
+
+function renderPrankButtons(targetNode, scope) {
+  if (!targetNode) return;
+  const disabled = state.mode !== 'remote' || (scope === 'session' && !state.currentSession);
+  targetNode.innerHTML = EFFECT_PRESETS.map(effect => `
+    <button
+      type="button"
+      class="admin-prank-button"
+      data-effect-scope="${scope}"
+      data-effect-type="${escapeHtml(effect.effectType)}"
+      ${disabled ? 'disabled' : ''}
+    >
+      <strong>${escapeHtml(effect.label)}</strong>
+      <span>${escapeHtml(effect.blurb)}</span>
+    </button>
+  `).join('');
+}
+
+function updatePrankTargets() {
+  renderPrankButtons(globalActions, 'all');
+  renderPrankButtons(targetActions, 'session');
+  if (targetHintNode) {
+    targetHintNode.textContent = state.currentSession
+      ? `Цілиться в ${state.currentSession.displayName || state.currentSession.shortLabel || 'відвідувача'} ${state.currentSession.shortLabel || ''}`.trim()
+      : 'Оберіть людину в списку, щоб запускати адресно.';
+  }
 }
 
 function relativePresence(value) {
@@ -93,6 +200,13 @@ function currentVisitorPresenceLabel() {
     return { text: 'Печатает...', className: 'typing' };
   }
   return relativePresence(visitor.lastSeenAt);
+}
+
+function canDeleteOperatorMessage(message) {
+  return Boolean(message)
+    && message.role === 'support'
+    && message.source !== 'system'
+    && !message.deletedAt;
 }
 
 function operatorHeaders() {
@@ -144,14 +258,15 @@ function filteredChats() {
 }
 
 function renderChatList() {
+  updateVisitorBadge();
   const chats = filteredChats();
   if (!chats.length) {
-    chatList.innerHTML = '<div class="admin-empty">Чатів поки немає або фільтр нічого не знайшов.</div>';
+    chatList.innerHTML = '<div class="admin-empty">Нікого не видно або фільтр нічого не знайшов.</div>';
     return;
   }
 
   chatList.innerHTML = chats.map(chat => {
-    const preview = escapeHtml((chat.lastMessagePreview || 'Без повідомлень').slice(0, 96));
+    const preview = escapeHtml((chat.lastMessagePreview || 'На сайті зараз · ще не писав').slice(0, 96));
     const unread = Number(chat.unreadOperatorCount || 0);
     const active = state.currentSession && state.currentSession.sessionId === chat.sessionId ? ' active' : '';
     const visitorPresence = chat.presence && chat.presence.visitor ? chat.presence.visitor : null;
@@ -198,6 +313,16 @@ function renderMessages() {
     presenceNode.className = `admin-chat-presence ${presence.className}`.trim();
   }
 
+  if (!state.messages.length) {
+    stream.innerHTML = `
+      <div class="admin-empty">
+        ${escapeHtml(state.currentSession.displayName || 'Відвідувач')} зараз на сайті, але ще нічого не написав.
+        Можна дати перше повідомлення або вистрілити приколом прямо звідси.
+      </div>
+    `;
+    return;
+  }
+
   let previousDay = '';
   stream.innerHTML = state.messages.map(message => {
     const dayKey = new Date(message.createdAt).toDateString();
@@ -205,12 +330,19 @@ function renderMessages() {
     previousDay = dayKey;
     const roleClass = message.role === 'support' ? 'support' : 'visitor';
     const text = escapeHtml(message.text).replace(/\n/g, '<br>');
+    const deletedClass = message.deletedAt ? ' deleted' : '';
+    const deleteButton = canDeleteOperatorMessage(message)
+      ? `<button type="button" class="admin-message-delete" data-message-delete="${escapeHtml(message.messageId)}">Удалить</button>`
+      : '';
     return `${divider}
       <div class="admin-message-row ${roleClass}">
-        <article class="admin-message-bubble">
+        <article class="admin-message-bubble${deletedClass}">
           <div class="admin-message-author">${escapeHtml(message.authorLabel)}</div>
           <div class="admin-message-text">${text}</div>
-          <div class="admin-message-time">${escapeHtml(formatClock(message.createdAt))}</div>
+          <div class="admin-message-actions">
+            <div class="admin-message-time">${escapeHtml(formatClock(message.createdAt))}</div>
+            ${deleteButton}
+          </div>
         </article>
       </div>`;
   }).join('');
@@ -245,21 +377,31 @@ async function loadChats() {
   try {
     if (config.apiBase) {
       const payload = await apiRequest('/api/operator/chats');
-      state.chats = payload.chats || [];
+      state.chats = sortChats(payload.chats || []);
       setMode('remote', telegramApp ? 'Telegram Mini App' : 'Браузер');
     } else {
-      state.chats = listLocalSessions();
+      state.chats = sortChats(listLocalSessions());
       setMode('demo', telegramApp ? 'Telegram Mini App' : 'Браузер');
     }
   } catch (error) {
-    state.chats = listLocalSessions();
+    state.chats = sortChats(listLocalSessions());
     setMode('degraded', 'Fallback');
   }
 
   renderChatList();
+  updatePrankTargets();
 
   if (!state.currentSession && state.chats.length) {
     await openChat(state.chats[0].sessionId);
+    return;
+  }
+
+  if (state.currentSession) {
+    const freshCurrent = state.chats.find(chat => chat.sessionId === state.currentSession.sessionId);
+    if (freshCurrent) {
+      state.currentSession = freshCurrent;
+      updatePrankTargets();
+    }
   }
 }
 
@@ -283,6 +425,7 @@ async function openChat(sessionId) {
 
   updateLayoutState();
   renderChatList();
+  updatePrankTargets();
   renderMessages();
 }
 
@@ -322,6 +465,54 @@ async function sendReply(rawText) {
   } finally {
     state.busy = false;
     sendButton.disabled = false;
+  }
+}
+
+async function deleteMessage(messageId) {
+  if (!state.currentSession || !messageId) return;
+  try {
+    if (state.mode === 'remote') {
+      await apiRequest(`/api/operator/chats/${encodeURIComponent(state.currentSession.sessionId)}/messages/${encodeURIComponent(messageId)}/delete`, {
+        method: 'POST'
+      });
+      flashSyncLabel('Сообщение удалено');
+    } else {
+      deleteLocalMessage(state.currentSession.sessionId, messageId, 'support');
+    }
+    await loadChats();
+    await openChat(state.currentSession.sessionId);
+  } catch (error) {
+    flashSyncLabel('Не вышло удалить', 3200);
+  }
+}
+
+async function triggerEffect(effectType, scope) {
+  const preset = EFFECT_PRESETS.find(item => item.effectType === effectType);
+  if (!preset || state.mode !== 'remote') {
+    flashSyncLabel('Приколи тільки онлайн', 3200);
+    return;
+  }
+  if (scope === 'session' && !state.currentSession) {
+    flashSyncLabel('Оберіть відвідувача', 3200);
+    return;
+  }
+  try {
+    await apiRequest('/api/operator/effects', {
+      method: 'POST',
+      body: {
+        scope,
+        sessionId: scope === 'session' ? state.currentSession.sessionId : null,
+        effectType: preset.effectType,
+        title: preset.title,
+        message: preset.message,
+        payload: {
+          label: preset.label
+        }
+      }
+    });
+    flashSyncLabel(scope === 'all' ? 'Прикол для всіх відправлено' : 'Адресний прикол відправлено');
+  } catch (error) {
+    flashSyncLabel('Прикол не вилетів', 3200);
   }
 }
 
@@ -367,6 +558,24 @@ chatList.addEventListener('click', event => {
   openChat(button.getAttribute('data-chat-id'));
 });
 
+stream.addEventListener('click', event => {
+  const deleteButton = event.target.closest('[data-message-delete]');
+  if (!deleteButton) return;
+  deleteMessage(deleteButton.getAttribute('data-message-delete'));
+});
+
+[globalActions, targetActions].forEach(node => {
+  if (!node) return;
+  node.addEventListener('click', event => {
+    const button = event.target.closest('[data-effect-type]');
+    if (!button) return;
+    triggerEffect(
+      button.getAttribute('data-effect-type'),
+      button.getAttribute('data-effect-scope') || 'all'
+    );
+  });
+});
+
 searchInput.addEventListener('input', event => {
   state.search = event.target.value || '';
   renderChatList();
@@ -398,6 +607,7 @@ backButton.addEventListener('click', () => {
   state.messages = [];
   updateLayoutState();
   renderChatList();
+  updatePrankTargets();
   renderMessages();
 });
 
@@ -436,6 +646,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 updateComposerHeight();
+updatePrankTargets();
 renderMessages();
 loadChats();
 startPolling();
