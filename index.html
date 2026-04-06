@@ -836,6 +836,7 @@
     color: #fff1cf;
     font-size: clamp(14px, 2.4vw, 28px);
     font-weight: 500;
+    white-space: nowrap;
     animation: temptationChant 0.85s ease-in-out infinite alternate;
   }
   .temptation-arrow {
@@ -1020,15 +1021,17 @@
       max-width: none;
     }
     .temptation-call {
+      font-size: clamp(11px, 3.6vw, 15px);
       letter-spacing: 0.08em;
     }
     .temptation-call.call-1,
     .temptation-call.call-2,
     .temptation-call.call-3,
     .temptation-call.call-4 {
-      font-size: 13px;
+      font-size: 11px;
     }
     .temptation-call.call-7 {
+      font-size: clamp(13px, 4.2vw, 18px);
       max-width: 80vw;
       text-align: center;
     }
@@ -2294,10 +2297,10 @@
   <div class="temptation-call call-7">ЖМИ-ЖМИ-ЖМИ!</div>
   <div class="temptation-arrow arrow-1">↘</div>
   <div class="temptation-arrow arrow-2">↙</div>
-  <div class="temptation-arrow arrow-3">↓</div>
-  <div class="temptation-arrow arrow-4">↘</div>
-  <div class="temptation-arrow arrow-5">↙</div>
-  <div class="temptation-arrow arrow-6">↓</div>
+  <div class="temptation-arrow arrow-3">→</div>
+  <div class="temptation-arrow arrow-4">←</div>
+  <div class="temptation-arrow arrow-5">↗</div>
+  <div class="temptation-arrow arrow-6">↖</div>
 </div>
 
 <div class="rickroll-overlay" id="rickrollOverlay" aria-hidden="true">
@@ -2571,13 +2574,13 @@
 
     const callLayout = mobile
       ? [
-          { dx: -150, dy: -165 },
-          { dx: 26, dy: -160 },
-          { dx: -190, dy: -58 },
-          { dx: 58, dy: -10 },
-          { dx: -160, dy: 78 },
-          { dx: 48, dy: 84 },
-          { dx: 0, dy: 118, centered: true }
+          { dx: -118, dy: -112 },
+          { dx: 22, dy: -112 },
+          { dx: -162, dy: -18 },
+          { dx: 86, dy: -18 },
+          { dx: -134, dy: 64 },
+          { dx: 72, dy: 64 },
+          { dx: 0, dy: 104, centered: true }
         ]
       : [
           { dx: -370, dy: -250 },
@@ -2591,20 +2594,20 @@
 
     const arrowLayout = mobile
       ? [
-          { dx: -86, dy: -106, centered: true },
-          { dx: 66, dy: -106, centered: true },
-          { dx: 0, dy: -152, centered: true },
-          { dx: -70, dy: 12, centered: true },
-          { dx: 54, dy: 12, centered: true },
-          { dx: 0, dy: 58, centered: true }
+          { dx: -64, dy: -72, centered: true },
+          { dx: 52, dy: -72, centered: true },
+          { dx: -104, dy: 4, centered: true },
+          { dx: 88, dy: 4, centered: true },
+          { dx: -58, dy: 46, centered: true },
+          { dx: 46, dy: 46, centered: true }
         ]
       : [
           { dx: -170, dy: -152, centered: true },
           { dx: 148, dy: -152, centered: true },
-          { dx: 0, dy: -210, centered: true },
-          { dx: -116, dy: 26, centered: true },
-          { dx: 104, dy: 26, centered: true },
-          { dx: 0, dy: 64, centered: true }
+          { dx: -220, dy: -2, centered: true },
+          { dx: 206, dy: -2, centered: true },
+          { dx: -118, dy: 70, centered: true },
+          { dx: 106, dy: 70, centered: true }
         ];
 
     temptationCalls.forEach((element, index) => {
