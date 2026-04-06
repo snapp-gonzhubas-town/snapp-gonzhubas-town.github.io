@@ -29,7 +29,8 @@ const config = Object.assign(
 );
 
 const SNOOP_GIF_URL = 'https://media.giphy.com/media/XgXZ4LiyVKoM7Ikk1B/giphy.gif';
-const SNOOP_AUDIO_URL = 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/58/53/c1/5853c174-820d-96dc-0cc4-7319efef43b2/mzaf_11149216817889125218.plus.aac.p.m4a';
+const SNOOP_AUDIO_URL = 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/b9/ba/62/b9ba6225-214a-d3ac-9a48-6566ad096252/mzaf_15788125226222732862.plus.aac.p.m4a';
+const SNOOP_EFFECT_DURATION_MS = 2600;
 
 const state = {
   identity: getSupportIdentity(),
@@ -180,17 +181,6 @@ function markLatestEffect(effect) {
   }
 }
 
-function effectCardHtml(effect) {
-  const title = escapeHtml(effect.title || 'Режим Snoop');
-  const message = escapeHtml(effect.message || 'Snoop Dogg вже на сцені.');
-  return `
-    <div class="support-livefx-card">
-      <strong>${title}</strong>
-      <span>${message}</span>
-    </div>
-  `;
-}
-
 function stopEffectAudio() {
   if (!state.activeEffectAudio) return;
   try {
@@ -217,7 +207,7 @@ function startSnoopAudio() {
     if (state.activeEffectAudio === audio) {
       stopEffectAudio();
     }
-  }, 32000);
+  }, SNOOP_EFFECT_DURATION_MS);
 }
 
 function spawnSnoopMode(effect) {
@@ -228,13 +218,11 @@ function spawnSnoopMode(effect) {
     <div class="support-livefx-snoop-glow"></div>
     <div class="support-livefx-snoop-card">
       <img class="support-livefx-snoop-gif" src="${SNOOP_GIF_URL}" alt="Snoop Dogg">
-      ${effectCardHtml(effect)}
-      <div class="support-livefx-snoop-note">На фоні запускається короткий офіційний preview-трек.</div>
     </div>
   `;
   liveFx.appendChild(layer);
   startSnoopAudio();
-  window.setTimeout(() => layer.remove(), 16000);
+  window.setTimeout(() => layer.remove(), SNOOP_EFFECT_DURATION_MS);
 }
 
 function playEffect(effect) {

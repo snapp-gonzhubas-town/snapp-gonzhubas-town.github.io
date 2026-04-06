@@ -1,7 +1,7 @@
 .support-root {
   position: fixed;
   inset: 0;
-  z-index: 9850;
+  z-index: 2147483647;
   pointer-events: none;
   font-family: 'IBM Plex Mono', monospace;
 }
@@ -33,35 +33,6 @@
   pointer-events: none;
 }
 
-.support-livefx-card {
-  max-width: min(90vw, 460px);
-  padding: 18px 20px;
-  border-radius: 24px;
-  border: 1px solid rgba(201, 168, 76, 0.34);
-  background: rgba(18, 40, 19, 0.92);
-  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
-  color: #fff6df;
-  text-align: center;
-}
-
-.support-livefx-card strong,
-.support-livefx-card span {
-  display: block;
-}
-
-.support-livefx-card strong {
-  font-size: clamp(18px, 2vw, 28px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.support-livefx-card span {
-  margin-top: 8px;
-  font-size: clamp(13px, 1.3vw, 16px);
-  line-height: 1.5;
-  color: #f5ebca;
-}
-
 .support-livefx-layer-toast,
 .support-livefx-layer-spotlight,
 .support-livefx-layer-alarm,
@@ -73,9 +44,9 @@
 
 .support-livefx-layer-snoop {
   background:
-    radial-gradient(circle at center, rgba(143, 255, 112, 0.1), rgba(0, 0, 0, 0) 28%),
-    linear-gradient(180deg, rgba(5, 15, 7, 0.62), rgba(5, 15, 7, 0.74));
-  animation: supportFxFade 16s ease forwards;
+    radial-gradient(circle at center, rgba(143, 255, 112, 0.12), rgba(0, 0, 0, 0) 30%),
+    linear-gradient(180deg, rgba(5, 15, 7, 0.78), rgba(5, 15, 7, 0.86));
+  animation: supportFxFadeShort 2.6s linear forwards;
 }
 
 .support-livefx-snoop-glow {
@@ -91,37 +62,21 @@
 .support-livefx-snoop-card {
   position: relative;
   z-index: 1;
-  width: min(92vw, 520px);
-  padding: 18px;
+  width: min(96vw, 640px);
+  padding: 0;
   border-radius: 28px;
-  border: 1px solid rgba(201, 168, 76, 0.32);
-  background: rgba(12, 29, 13, 0.92);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  overflow: hidden;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
 }
 
 .support-livefx-snoop-gif {
   display: block;
   width: 100%;
+  max-height: min(92vh, 720px);
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 20px;
-  border: 1px solid rgba(201, 168, 76, 0.24);
   background: rgba(255, 255, 255, 0.08);
-}
-
-.support-livefx-snoop-card .support-livefx-card {
-  max-width: none;
-  margin-top: 14px;
-  background: rgba(19, 43, 20, 0.92);
-}
-
-.support-livefx-snoop-note {
-  margin-top: 12px;
-  color: #d9dfc5;
-  text-align: center;
-  font-size: 11px;
-  line-height: 1.5;
-  letter-spacing: 0.04em;
 }
 
 .support-livefx-layer-toast {
@@ -669,6 +624,18 @@
     opacity: 0;
   }
   22%, 70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes supportFxFadeShort {
+  0% {
+    opacity: 0;
+  }
+  8%, 84% {
     opacity: 1;
   }
   100% {
