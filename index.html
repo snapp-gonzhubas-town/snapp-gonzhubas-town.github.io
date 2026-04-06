@@ -329,8 +329,17 @@
     padding: 6px 14px;
     cursor: pointer;
     border-radius: 2px;
-    transition: all 0.2s;
+    transition:
+      background-color 0.22s ease,
+      color 0.22s ease,
+      border-color 0.22s ease,
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
     letter-spacing: 0.04em;
+  }
+  .chapter-tab:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(15, 26, 14, 0.08);
   }
   .chapter-tab:hover, .chapter-tab.active {
     background: var(--green-dark);
@@ -362,9 +371,29 @@
     margin-top: 32px;
     cursor: pointer;
     user-select: none;
-    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+    transform: translateY(0);
+    transition:
+      background-color 0.26s ease,
+      transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.26s ease;
   }
-  .chapter-header:hover { background: var(--green-mid); }
+  .chapter-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, 0.12) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.24s ease;
+    pointer-events: none;
+  }
+  .chapter-header:hover {
+    background: var(--green-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(15, 26, 14, 0.12);
+  }
+  .chapter-header:hover::after { opacity: 1; }
   .chapter-header .ch-num {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
@@ -387,13 +416,16 @@
     border-radius: 0 0 2px 2px;
     overflow: hidden;
     opacity: 1;
+    transform: translateY(0);
     transition:
       max-height 0.48s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.22s ease;
+      opacity 0.22s ease,
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: max-height, opacity;
   }
   .chapter-articles.collapsed {
     opacity: 0;
+    transform: translateY(-8px);
     pointer-events: none;
   }
 
@@ -588,16 +620,19 @@
     border-top: 1px solid var(--green-pale);
     overflow: hidden;
     opacity: 0;
+    transform: translateY(-8px);
     pointer-events: none;
     transition:
       max-height 0.42s cubic-bezier(0.22, 1, 0.36, 1),
       padding-bottom 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.2s ease;
+      opacity 0.2s ease,
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: max-height, opacity;
   }
   .article-body.open {
     padding-bottom: 24px;
     opacity: 1;
+    transform: translateY(0);
     pointer-events: auto;
   }
   .article-summary {
@@ -686,6 +721,7 @@
     color: #7aaa7a;
     text-align: center;
     padding: 40px;
+    position: relative;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 12px;
     letter-spacing: 0.06em;
@@ -724,15 +760,137 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
+    position: relative;
+    z-index: 9805;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      filter 0.18s ease,
+      border-color 0.18s ease;
   }
   .danger-button:hover {
     transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.26);
     filter: brightness(1.06);
   }
+  body.danger-hover-active .danger-button {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 18px 42px rgba(120, 10, 10, 0.34);
+    border-color: #ffd3a8;
+    filter: brightness(1.08) saturate(1.08);
+  }
   .danger-button:active { transform: translateY(0); }
+  .temptation-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+    z-index: 9700;
+    transition: opacity 0.18s ease;
+  }
+  .temptation-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 86%, rgba(255, 223, 149, 0.18) 0%, rgba(255, 223, 149, 0) 18%),
+      radial-gradient(circle at 50% 92%, rgba(216, 31, 31, 0.28) 0%, rgba(216, 31, 31, 0) 24%),
+      linear-gradient(180deg, rgba(8, 14, 10, 0.28) 0%, rgba(61, 0, 0, 0.34) 100%);
+    animation: temptationPulse 0.95s ease-in-out infinite alternate;
+  }
+  .temptation-overlay::after {
+    content: '';
+    position: absolute;
+    inset: -12%;
+    background:
+      repeating-linear-gradient(
+        120deg,
+        rgba(255, 210, 120, 0.08) 0 24px,
+        rgba(255, 210, 120, 0) 24px 56px
+      );
+    opacity: 0.5;
+    animation: temptationSweep 11s linear infinite;
+  }
+  body.danger-hover-active .temptation-overlay {
+    opacity: 1;
+  }
+  .temptation-call,
+  .temptation-arrow {
+    position: absolute;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+  .temptation-call {
+    color: #fff1cf;
+    font-size: clamp(14px, 2.4vw, 28px);
+    font-weight: 500;
+    animation: temptationChant 0.85s ease-in-out infinite alternate;
+  }
+  .temptation-arrow {
+    color: #ffd46a;
+    font-size: clamp(24px, 6vw, 58px);
+    animation: temptationArrow 0.9s ease-in-out infinite alternate;
+  }
+  body.danger-hover-active .temptation-call,
+  body.danger-hover-active .temptation-arrow {
+    opacity: 1;
+  }
+  .temptation-call.call-1 { top: 10%; left: 7%; animation-delay: 0s; }
+  .temptation-call.call-2 { top: 17%; right: 6%; animation-delay: 0.12s; }
+  .temptation-call.call-3 { top: 36%; left: 10%; animation-delay: 0.26s; }
+  .temptation-call.call-4 { top: 42%; right: 8%; animation-delay: 0.18s; }
+  .temptation-call.call-5 { bottom: 23%; left: 13%; animation-delay: 0.32s; }
+  .temptation-call.call-6 { bottom: 18%; right: 12%; animation-delay: 0.08s; }
+  .temptation-call.call-7 {
+    left: 50%;
+    bottom: 12%;
+    transform: translateX(-50%);
+    font-size: clamp(18px, 3vw, 34px);
+    animation-name: temptationChantCentered;
+    animation-delay: 0.15s;
+  }
+  .temptation-arrow.arrow-1 { top: 14%; left: 28%; animation-delay: 0s; }
+  .temptation-arrow.arrow-2 { top: 16%; right: 26%; animation-delay: 0.14s; }
+  .temptation-arrow.arrow-3 { top: 44%; left: 50%; animation-delay: 0.28s; }
+  .temptation-arrow.arrow-4 { bottom: 16%; left: 38%; animation-delay: 0.08s; }
+  .temptation-arrow.arrow-5 { bottom: 14%; right: 34%; animation-delay: 0.2s; }
+  .temptation-arrow.arrow-6 {
+    bottom: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-name: temptationArrowCentered;
+    animation-delay: 0.34s;
+  }
+  @keyframes temptationPulse {
+    from { opacity: 0.72; filter: saturate(0.96); }
+    to { opacity: 0.94; filter: saturate(1.08); }
+  }
+  @keyframes temptationSweep {
+    from { transform: translate3d(-2%, 0, 0); }
+    to { transform: translate3d(2%, 0, 0); }
+  }
+  @keyframes temptationChant {
+    from { transform: translate3d(0, 0, 0) scale(0.98); }
+    to { transform: translate3d(0, -6px, 0) scale(1.02); }
+  }
+  @keyframes temptationChantCentered {
+    from { transform: translate3d(-50%, 0, 0) scale(0.98); }
+    to { transform: translate3d(-50%, -6px, 0) scale(1.02); }
+  }
+  @keyframes temptationArrow {
+    from { transform: translate3d(0, -2px, 0) scale(0.96); }
+    to { transform: translate3d(0, 8px, 0) scale(1.04); }
+  }
+  @keyframes temptationArrowCentered {
+    from { transform: translate3d(-50%, -2px, 0) scale(0.96); }
+    to { transform: translate3d(-50%, 8px, 0) scale(1.04); }
+  }
   .rickroll-overlay {
     position: fixed;
     inset: 0;
@@ -872,6 +1030,32 @@
     }
     .article-preview {
       max-width: none;
+    }
+    .temptation-call {
+      letter-spacing: 0.08em;
+    }
+    .temptation-call.call-1,
+    .temptation-call.call-2,
+    .temptation-call.call-3,
+    .temptation-call.call-4 {
+      font-size: 13px;
+    }
+    .temptation-call.call-5,
+    .temptation-call.call-6 {
+      bottom: 24%;
+    }
+    .temptation-call.call-7 {
+      bottom: 10%;
+      max-width: 80vw;
+      text-align: center;
+    }
+    .temptation-arrow.arrow-1,
+    .temptation-arrow.arrow-2 {
+      top: 20%;
+    }
+    .temptation-arrow.arrow-4,
+    .temptation-arrow.arrow-5 {
+      bottom: 18%;
     }
   }
 </style>
@@ -1968,7 +2152,7 @@
         </button>
         <div class="article-body">
           <div class="article-summary">Соціологічні дослідження кожні 5 років: рівень проб серед молоді, вплив на ВВП, доходи бюджету. Результати — при коригуванні політики.</div>
-          <h4>Підпункти">
+          <h4>Підпункти</h4>
           <ul class="subpoints">
             <li><span class="sp-num">46.1</span>Кожні 5 років проводиться масштабне соціологічне дослідження (КМІС або незалежна агенція, мін. 3000 осіб).</li>
             <li><span class="sp-num">46.2</span>Дослідження охоплює: частоту вживання серед різних вікових груп, рівень залежності, економічний ефект легалізації, ставлення до державної політики.</li>
@@ -2121,6 +2305,22 @@
   <button type="button" class="danger-button" id="rickrollButton">НЕ НАТИСКАТИ</button>
   <p class="footer-legal">Цей документ є муніципальним пілотним проєктом і не є чинним законодавчим актом. Усі посилання на статті ККУ та КУпАП наведено виключно з інформаційною та дослідницькою метою. Відповідність Конституції України та чинному законодавству підлягає окремій правовій експертизі.</p>
 </footer>
+
+<div class="temptation-overlay" id="temptationOverlay" aria-hidden="true">
+  <div class="temptation-call call-1">Жми-жми-жми!</div>
+  <div class="temptation-call call-2">Та давай вже!</div>
+  <div class="temptation-call call-3">Точно не натискати?</div>
+  <div class="temptation-call call-4">Один разок!</div>
+  <div class="temptation-call call-5">Натисни кнопку!</div>
+  <div class="temptation-call call-6">Сміливіше!</div>
+  <div class="temptation-call call-7">ЖМИ-ЖМИ-ЖМИ!</div>
+  <div class="temptation-arrow arrow-1">⇣</div>
+  <div class="temptation-arrow arrow-2">⇣</div>
+  <div class="temptation-arrow arrow-3">⇣</div>
+  <div class="temptation-arrow arrow-4">⇣</div>
+  <div class="temptation-arrow arrow-5">⇣</div>
+  <div class="temptation-arrow arrow-6">⇣</div>
+</div>
 
 <div class="rickroll-overlay" id="rickrollOverlay" aria-hidden="true">
   <div class="rickroll-modal">
@@ -2347,6 +2547,14 @@
   const rickrollOverlay = document.getElementById('rickrollOverlay');
   const rickrollVideo = document.getElementById('rickrollVideo');
   const rickrollClose = document.getElementById('rickrollClose');
+  const temptationOverlay = document.getElementById('temptationOverlay');
+
+  function setDangerHoverState(isActive) {
+    document.body.classList.toggle('danger-hover-active', !!isActive);
+    if (temptationOverlay) {
+      temptationOverlay.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+    }
+  }
 
   function closeRickroll() {
     if (!rickrollOverlay || !rickrollVideo) return;
@@ -2358,8 +2566,21 @@
   }
 
   if (rickrollButton) {
+    rickrollButton.addEventListener('mouseenter', function() {
+      setDangerHoverState(true);
+    });
+    rickrollButton.addEventListener('mouseleave', function() {
+      setDangerHoverState(false);
+    });
+    rickrollButton.addEventListener('focus', function() {
+      setDangerHoverState(true);
+    });
+    rickrollButton.addEventListener('blur', function() {
+      setDangerHoverState(false);
+    });
     rickrollButton.addEventListener('click', function() {
       if (!rickrollOverlay || !rickrollVideo) return;
+      setDangerHoverState(false);
       rickrollOverlay.classList.add('open');
       rickrollOverlay.setAttribute('aria-hidden', 'false');
       document.body.classList.add('no-scroll');
